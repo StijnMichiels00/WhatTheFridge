@@ -11,6 +11,7 @@ Met behulp van onze applicatie kan je recepten vinden met ingrediënten die je i
 - **Sla je favoriete recepten op**
 - **Deel recepten met andere gebruikers**
 - **Sorteren op bereidingstijd, prijsklasse en aantal extra benodigde ingrediënten**
+
 _Vetgedrukt = MVP_
 ## Afhankelijkheden
 ### API
