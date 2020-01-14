@@ -167,7 +167,7 @@ def profile():
     username = [x["username"] for x in (db.execute("SELECT username FROM users WHERE id=:q", q=session["user_id"]))][0]
 
     if request.method == "POST":
-        return print("TODO")
+        return render_template("index.html")
 
     else:
         return render_template("profile.html", username=username)
