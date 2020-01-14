@@ -57,3 +57,6 @@ Zie prototype op Invision voor schetsen: [open](https://whatthefridge.invisionap
 - Flask - [Docs](http://flask.palletsprojects.com/en/1.1.x/)
 - Jinja - [Docs](https://jinja.palletsprojects.com/en/2.10.x/)
 - JQuery (+ JS) - [Docs](https://api.jquery.com/)
+
+## ERD
+![ERD](https://github.com/StijnMichiels00/WhatTheFridge/blob/master/ERD-WhatTheFridge.png)
