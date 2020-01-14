@@ -33,7 +33,6 @@ Session(app)
 db = SQL("sqlite:///wtf.db")
 
 @app.route("/")
-@login_required
 def home():
     return render_template("index.html")
 
