@@ -40,7 +40,16 @@ def home():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    return print("TODO")
+    if request.method == "POST":
+        # If no username is typed in, error
+        if not request.form.get("username"):
+            # Return function errorhandle if no username is typed in
+            return errorhandle("You must type in a username", 400)
+
+        # If no password is typed in, error
+        elif not request.form.get("password"):
+            # Return function errorhandle if no password is typed in
+            return errorhandle("You must type in a password", 400)
 
 
 @app.route("/login", methods=["GET", "POST"])
