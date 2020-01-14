@@ -85,7 +85,7 @@ def login():
 @app.route("/search", methods=["GET", "POST"])
 @login_required
 def search():
-    return print("TODO")
+    return ("search.html")
 
 
 @app.route("/results", methods=["GET", "POST"])

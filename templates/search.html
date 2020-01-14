@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Search for recipes
+{% endblock %}
+
+{% block main %}
+    <h1 class="display-4">Whats in your fridge?</h1>
+
+    <div class="form">
+        <label for="item" What&apos;s in your fridge: </label><input type="text" id="Item">
+        <button id="add"> Add item</button>
+        <button id="clear" Clear items </button>
+        <button id="search" Search for recipes </button>
+    </div>
+
+    <ul id="list">
+
+
+    </ul>
+
+    <script>
+        var itemInput = document.getElementById("item");
+        var clear = document.getElementById("clear");
+        var add = document.getElementById("submit");
+        var list = document.getElementById("list");
+
+   function addItem() {
+        var currentItem = itemInput.value;
+        var listItem = document.createElement("li");
+        listItem.innerHTML = currentItem;
+
+        list.appendChild(listItem);
+
+        itemInput.value = "";
+
+   }
+
+   add.onclick = addItem;
+
+   clear.onclick = function() {
+        list.innerHTML = "";
+        itemInput.value = "";
+
+   };
+    </script>
+
+{% endblock %}
