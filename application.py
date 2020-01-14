@@ -138,7 +138,11 @@ def results():
 @app.route("/profile", methods=["GET", "POST"])
 # @login_required
 def profile():
-    return print("TODO")
+    if request.method == "POST":
+        return print("TODO")
+
+    else:
+        return render_template("profile.html")
 
 
 @app.route("/favorites", methods=["GET"])
