@@ -83,6 +83,7 @@ def login():
 @app.route("/search", methods=["GET", "POST"])
 # @login_required
 def search():
+
     if request.method == "POST":
         pass
 
