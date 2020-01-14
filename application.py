@@ -82,6 +82,32 @@ def register():
     else:
         return render_template("register.html")
 
+@app.route("/password", methods=["GET", "POST"])
+@login_required
+def password():
+    if request.method == "POST":
+        password = request.form.get("password")
+
+        # Haalt de huidige hash op
+        code0 = db.execute("SELECT hash FROM users WHERE id=:q", q=session["user_id"])
+        for cd in code0:
+            code = cd["hash"]
+
+        # Maakt nieuwe hash
+        npassword = request.form.get("newpassword")
+        newpassword = generate_password_hash(npassword)
+
+        # Wachtwoord check
+        if check_password_hash(code, password) == False:
+            return flash("Password incorrect")
+
+        # Veranderen wachtwoord in database
+        else:
+            db.execute("UPDATE users SET hash=:p WHERE id=:d", p=newpassword, d=session["user_id"])
+            return render_template("password.html")
+
+    else:
+        return render_template("profile.html")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -138,11 +164,13 @@ def results():
 @app.route("/profile", methods=["GET", "POST"])
 # @login_required
 def profile():
+    username = [x["username"] for x in (db.execute("SELECT username FROM users WHERE id=:q", q=session["user_id"]))][0]
+
     if request.method == "POST":
         return print("TODO")
 
     else:
-        return render_template("profile.html")
+        return render_template("profile.html", username=username)
 
 
 @app.route("/favorites", methods=["GET"])
