@@ -43,22 +43,26 @@ def register():
         # Must provide username
         if not request.form.get("username"):
             # Return function errorhandle if no username is provided
-            return errorhandle("You must type in a username!")
+            flash("Your username can't be empty.")
+            return render_template("register.html")
 
         # Must provide password
         elif not request.form.get("password"):
             # Return function errorhandle if no password is provided
-            return errorhandle("You must type in a password!")
+            flash("Your password can't be empty.")
+            return render_template("register.html")
 
         # Must provide confirmation
         elif not request.form.get("confirmation"):
             # Return function errorhandle if no confirmation is provided
-            return errorhandle("You must type in a confirmation!")
+            flash("Your password confirmation can't be empty.")
+            return render_template("register.html")
 
         # Password and confirmation have to match to successfully register
         elif request.form.get("password") != request.form.get("confirmation"):
             # Return function errorhandle if password and confirmation don't match
-            return errorhandle("Password and confirmation must match!")
+            flash("Your password and confimation don't match.")
+            return render_template("register.html")
 
         # Checks databse if username is already taken
         user_taken = db.execute("SELECT * FROM users WHERE username = :username",
@@ -66,10 +70,12 @@ def register():
 
         # Return error message if username is already taken
         if len(user_taken) == 1:
-            return errorhandle("Username is already taken!")
+            flash("This username has been taken. Choose something else...")
+            return render_template("register.html")
 
-        # Redirect to homepage
-        return redirect("/")
+        rows = db.execute("INSERT INTO users ('username','hash') VALUES (?,?)", request.form.get('username'), generate_password_hash(request.form.get("password")))
+        session["user_id"] = rows
+        return redirect("/search")
 
     else:
         return render_template("register.html")

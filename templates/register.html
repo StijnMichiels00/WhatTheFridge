@@ -7,7 +7,8 @@
 {% block main %}
 <center>
     <h1 class="display-4">Create account</h1>
-    <form action="/register" method="post">
+    <div id = "alert_placeholder"></div>
+    <form action="/register" method="post" id="form">
     <div class="form-group">
         <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text" style= width:50%>
     </div>
