@@ -1,3 +1,11 @@
+.main-navigation .menu > li > a {
+    border-right: 1px solid #000000;
+}
+
+.main-navigation .menu > li:last-child > a {
+    border-right: 0;
+}
+
 .index {
   background: url('/static/bg.jpg') no-repeat center center fixed;
   -webkit-background-size: cover;
