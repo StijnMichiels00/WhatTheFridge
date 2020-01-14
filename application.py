@@ -39,7 +39,42 @@ def home():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    return print("TODO")
+    if request.method == "POST":
+        # Must provide username
+        if not request.form.get("username"):
+            # Return function errorhandle if no username is provided
+            return errorhandle("You must type in a username!", 400)
+
+        # Must provide password
+        elif not request.form.get("password"):
+            # Return function errorhandle if no password is provided
+            return errorhandle("You must type in a password!", 400)
+
+        # Must provide confirmation
+        elif not request.form.get("confirmation"):
+            # Return function errorhandle if no confirmation is provided
+            return errorhandle("You must type in a confirmation!", 400)
+
+        # Password and confirmation have to match to successfully register
+        elif request.form.get("password") != request.form.get("confirmation"):
+            # Return function errorhandle if password and confirmation don't match
+            return errorhandle("Password and confirmation must match!", 400)
+
+        # Checks databse if username is already taken
+        user_taken = db.execute("SELECT * FROM users WHERE username = :username",
+                                username=request.form.get("username"))
+
+        # Return error message if username is already taken
+        if len(user_taken) == 1:
+            return errorhandle("Username is already taken!", 400)
+
+        # Redirect to homepage
+        return redirect("/")
+
+    else:
+        return render_template(......)
+
+
 
 
 @app.route("/login", methods=["GET", "POST"])
