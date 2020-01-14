@@ -6,15 +6,17 @@
 
 {% block main %}
     <h1>
-        <strong>Change password</strong>
+        <strong>Profile</strong>
     </h1>
+    <h2>Username: {{username}}</h2>
+    <h2>Preference:</h2>
+    <form action="/profile" method="post">
+        <input type="checkbox" name="meat" value="Meat" checked> Meat<br>
+        <input type="checkbox" name="vegetarian" value="Vegetarian"> Vegetarian<br>
+        <input type="checkbox" name="vegan" value="Vegan"> Vegan<br><br>
+        <input type="submit" value="Submit">
+    </form><br>
     <form action="/password" method="post">
-        <div class="form-group">
-            <input class="form-control" name="password" placeholder="Password" type="password">
-        </div>
-        <div class="form-group">
-            <input class="form-control" name="newpassword" placeholder="New password" type="password">
-        </div>
-        <button class="btn btn-primary" type="submit">Change</button>
+        <button class="btn btn-primary" type="submit">Change password</button>
     </form>
 {% endblock %}
