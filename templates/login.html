@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block main %}
+<center>
+    <h1 class="display-4">Log in</h1>
+    <div id = "alert_placeholder"></div>
+    <form action="/login" method="post" id="form">
+    <div class="form-group">
+        <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text" style= width:50%>
+    </div>
+    <div class="form-group">
+        <input autocomplete="off" autofocus class="form-control" name="password" placeholder="Password" type="password" style= width:50%>
+    </div>
+    <button class="btn btn-primary" type="submit">Login</button>
+    </form>
+</center>
+{% endblock %}

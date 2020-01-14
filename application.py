@@ -42,25 +42,21 @@ def register():
     if request.method == "POST":
         # Must provide username
         if not request.form.get("username"):
-            # Return function errorhandle if no username is provided
             flash("Your username can't be empty.")
             return render_template("register.html")
 
         # Must provide password
         elif not request.form.get("password"):
-            # Return function errorhandle if no password is provided
             flash("Your password can't be empty.")
             return render_template("register.html")
 
         # Must provide confirmation
         elif not request.form.get("confirmation"):
-            # Return function errorhandle if no confirmation is provided
             flash("Your password confirmation can't be empty.")
             return render_template("register.html")
 
         # Password and confirmation have to match to successfully register
         elif request.form.get("password") != request.form.get("confirmation"):
-            # Return function errorhandle if password and confirmation don't match
             flash("Your password and confimation don't match.")
             return render_template("register.html")
 
@@ -73,8 +69,14 @@ def register():
             flash("This username has been taken. Choose something else...")
             return render_template("register.html")
 
-        rows = db.execute("INSERT INTO users ('username','hash') VALUES (?,?)", request.form.get('username'), generate_password_hash(request.form.get("password")))
-        session["user_id"] = rows
+        # Insert username and password into database
+        db.execute("INSERT INTO users (username, hash) VALUES (:username, :Hash)",
+                   username=request.form.get("username"), Hash=generate_password_hash(request.form.get("password"), method='pbkdf2:sha256', salt_length=8))
+
+        # Remember which user is logged in
+        session["user_id"] = user_taken[0]["id"]
+
+        # Redirect to our search page
         return redirect("/search")
 
     else:
@@ -83,7 +85,39 @@ def register():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    return print("TODO")
+    # Forgets any user that is logged in
+    session.clear()
+
+    # User reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+
+        # Must provide a username
+        if not request.form.get("username"):
+            flash("Your username can't be empty.")
+            return render_template("login.html")
+
+        # Must provide a password
+        elif not request.form.get("password"):
+            flash("Your password can't be empty.")
+            return render_template("login.html")
+
+        # Checks databse if username is already taken
+        user_taken = db.execute("SELECT * FROM users WHERE username = :username",
+                                username=request.form.get("username"))
+
+        # Checks if username is in database and if password corresponds with that user
+        if len(user_taken) != 1 or not check_password_hash(user_taken[0]["hash"], request.form.get("password")):
+            flash("Invalid username and/or password.")
+            return render_template("login.html")
+
+        # Remember which user has logged in
+        session["user_id"] = user_taken[0]["id"]
+
+        # Redirect to our search page
+        return redirect("/search.html")
+
+    else:
+        return render_template("login.html")
 
 
 @app.route("/search", methods=["GET", "POST"])
