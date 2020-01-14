@@ -1,23 +1,32 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Search for recipes
+    Search
 {% endblock %}
 
 {% block main %}
-    <h1 class="display-4">Whats in your fridge?</h1>
+<div class="jumbotron">
+    <h1 class="display-4">Search recipes.</h1>
+    <p class="lead">Tell us what's in your fridge to get the best recommendations.</p>
+    <form class="form">
+    <div class="form-group">
 
-    <div class="form">
-        <label for="item" What&apos;s in your fridge: </label><input type="text" id="Item">
-        <button id="add"> Add item</button>
-        <button id="clear" Clear items </button>
-        <button id="search" Search for recipes </button>
-    </div>
+        <textarea id="Itemlist" rows="3" readonly class="form-control" placeholder="Get started by adding some items below..."></textarea><br>
+        </div>
+        <div class="form-inline form-group">
+            <input type="text" class="form-control" id="ingredient_input" placeholder="Start typing to get suggestions..." style="width:88%">
+            <button class="btn btn-primary" onsubmit="" id="add" style="margin-left:2%">Add item</button><br>
+        </div>
 
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit" id="search">Search</button>
+            <button class="btn btn-primary" type="clear" id="clear">Clear items</button>
+        </div>
+</form>
     <ul id="list">
 
 
-    </ul>
+    </ul></div>
 
     <script>
         var itemInput = document.getElementById("item");

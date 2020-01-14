@@ -83,7 +83,7 @@ def login():
 @app.route("/search", methods=["GET", "POST"])
 # @login_required
 def search():
-    return ("search.html")
+    return render_template("search.html")
 
 
 @app.route("/results", methods=["GET", "POST"])
