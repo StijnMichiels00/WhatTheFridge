@@ -16,3 +16,27 @@ def login_required(f):
             return redirect("/login")
         return f(*args, **kwargs)
     return decorated_function
+
+def lookup(ingredients):
+    """
+    Lookup recipes by ingredients
+
+    https://spoonacular.com/food-api/docs#Search-Recipes-by-Ingredients
+    """
+    ingredients_string = ','.join(map(str, ingredients))
+
+    try:
+        api_key = "59757b939d834ee0aa5a09827389b5f6"
+        response = requests.get(f"https://api.spoonacular.com/recipes/findByIngredients?ingredients={(ingredients_string)}/?apiKey={api_key}")
+        response.raise_for_status()
+    except requests.RequestException:
+        return None
+
+    # Parse response
+    try:
+        recipes = response.json()
+        return recipes
+
+    except (KeyError, TypeError, ValueError):
+        return None
+
