@@ -81,25 +81,25 @@ def login():
 
 
 @app.route("/search", methods=["GET", "POST"])
-@login_required
+# @login_required
 def search():
     return ("search.html")
 
 
 @app.route("/results", methods=["GET", "POST"])
-@login_required
+# @login_required
 def results():
     return print("TODO")
 
 
 @app.route("/profile", methods=["GET", "POST"])
-@login_required
+# @login_required
 def profile():
     return print("TODO")
 
 
 @app.route("/favorites", methods=["GET"])
-@login_required
+# @login_required
 def favorites():
     return print("TODO")
 
