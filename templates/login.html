@@ -3,10 +3,12 @@
 {% block title %}
     Login
 {% endblock %}
-
+{% block class %}login{% endblock %}
 {% block main %}
 <center>
+    <div class="jumbotron" style = width:50%>
     <h1 class="display-4">Log in</h1>
+    </div>
     <div id = "alert_placeholder"></div>
     <form action="/login" method="post" id="form">
     <div class="form-group">
