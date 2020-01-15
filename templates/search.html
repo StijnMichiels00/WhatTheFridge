@@ -24,7 +24,7 @@
 
         <div class="form-group">
             <button class="btn btn-primary" type="submit" id="search">Search</button>
-            <button class="btn btn-primary" type="iets" id="removelast">Remove last added item</button>
+            <button class="btn btn-primary" id="removelast">Remove last item</button>
             <button class="btn btn-primary" type="clear" id="clear">Clear items</button>
         </div>
 </form>
@@ -34,26 +34,33 @@
         $('#ingredient_input').autocomplete({
         source: ingredients
         });
+        $("#ingredient_input").keyup(function(event) {
+            if (event.keyCode === 13) {
+                $("#add").click();
+            }
+        });
     </script>
 
     <script>
 
-        var previous_list;
+        var item_count = 0;
 
         // Create a new list item when clicking on the "Add" button
         $('#add').on('click', function (e) {
-          var li = document.createElement("li");
           var inputValue = document.getElementById("ingredient_input").value;
-          var t = document.createTextNode(inputValue);
-          li.appendChild(t);
           if (inputValue === '') {
             alert("You must write something!");
           }
           else {
             var $edit = $("#Itemlist");
             var curValue = $edit.val();
-            previous_list = $edit.val();
-            var newValue = curValue + inputValue + "\n";
+            if (item_count == 0){
+                var newValue = inputValue ;
+            }
+            else{
+                var newValue = curValue + "\n"+ inputValue ;
+            }
+            item_count += 1;
             $edit.val(newValue);
           }
           document.getElementById("ingredient_input").value = "";
@@ -66,7 +73,16 @@
 
         $('#removelast').on('click', function (e) {
             var $edit = $("#Itemlist");
-            $edit.val(previous_list);
+            var curValue = $edit.val();
+            var lines = curValue.split('\n');
+            lines.splice((item_count - 1),1);
+            if (item_count == 0){
+                item_count = 0;
+            }
+            else{
+                item_count -= 1;
+            }
+            $edit.val(lines.join('\n'));
         });
 
     </script>
