@@ -141,7 +141,7 @@ def login():
         session["user_id"] = user_taken[0]["id"]
 
         # Redirect to our search page
-        return redirect("/search.html")
+        return redirect("/search")
 
     else:
         return render_template("login.html")
