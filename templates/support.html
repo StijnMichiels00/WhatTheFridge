@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Profile
+{% endblock %}
+{% block class %}support{% endblock %}
+{% block main %}
+    <div class="jumbotron">
+        <h1 class="display-3">Support</h1>
+        <p class="lead">We'll get you back cooking in no-time!</p>
+<hr>
+        <h2>Frequently Asked Questions</h2>
+        <p><strong>Question:</strong> How can I find recipes?
+        <br><strong>Answer:</strong> Find recipes by entering ingredients you'd like to search with on the search page.
+                <p><strong>Question:</strong> How can I filter out meat or fish?
+        <br><strong>Answer:</strong> No worries about that! We're happy to help you find recipes which fit into your diet. Just head to your profile and select your preferences.</p>
+                        <p><strong>Question:</strong> I'm trying to access a page but I'm getting an error message? What can I do?
+        <br><strong>Answer:</strong> Hmm, that doesn't sound right. Best thing to do here is get in touch with us with the button below. Be sure to provide what you were trying to do and what error message you got in your e-mail.</p>
+
+<hr>
+        <form action="mailto:info@whatthefridge.com" method="post">
+            <input style="display:none" name="username" value="{{ username }}" type="text">
+                    <p>Your username is: <strong>{{username}}</strong></p>
+            <button class="btn btn-info" type="submit">I still need help</button>
+        </form>
+    </div>
+{% endblock %}
