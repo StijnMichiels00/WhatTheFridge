@@ -3,7 +3,7 @@
 {% block title %}
     Search
 {% endblock %}
-
+{% block class %}search{% endblock %}
 {% block main %}
 <style>
 .ui-autocomplete { max-height: 200px; overflow-y: scroll; overflow-x: hidden;}
@@ -12,10 +12,10 @@
 <div class="jumbotron">
     <h1 class="display-4">Search recipes.</h1>
     <p class="lead">Tell us what's in your fridge to get the best recommendations.</p>
-    <form class="form">
+    <form class="form" action="/results" method="POST">
     <div class="form-group">
 
-        <textarea id="Itemlist" rows="3" readonly class="form-control" placeholder="Get started by adding some items below..."></textarea><br>
+        <textarea id="Itemlist" name="itemlist" rows="3" readonly class="form-control" placeholder="Get started by adding some items below..."></textarea><br>
         </div>
         <div class="form-inline form-group">
             <input type="text" class="form-control bs-autocomplete-menu" id="ingredient_input" placeholder="Start typing to get suggestions..." style="width:88%" autocomplete="off">

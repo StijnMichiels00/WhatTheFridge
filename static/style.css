@@ -1,7 +1,8 @@
-.index footer {
-    display:none;
-}
 
+.jumbotron {
+    background-color:rgba(0, 0, 0, 0.6);
+    color:white;
+}
 
 .ui-autocomplete {
   position: absolute;
@@ -63,3 +64,37 @@
   background-size: cover;
   -o-background-size: cover;
 }
+
+
+.register {
+  background-image: url("register.jpg");
+  background-repeat: no-repeat;
+  background-size :cover;
+}
+
+
+.login {
+  background-image: url("login.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.login input {
+  max-width:50%;
+}
+.profile {
+  background: url('/static/profile.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+}
+
+.search {
+  background: url('/static/search.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+}
+
