@@ -3,24 +3,26 @@
 {% block title %}
     Profile
 {% endblock %}
-
+{% block class %}profile{% endblock %}
 {% block main %}
-    <h1>
-        <strong>Profile</strong>
-    </h1>
-    <h2>Username: {{username}}<br><br></h2>
-    <h2>Preference:</h2>
-    <form action="/profile" method="post">
-        <input type="checkbox" name="meat" value="Meat" checked> Meat<br>
-        <input type="checkbox" name="vegetarian" value="Vegetarian"> Vegetarian<br>
-        <input type="checkbox" name="vegan" value="Vegan"> Vegan<br><br>
-        <input class="btn btn-warning" type="submit" value="Submit">
-    </form><br><br>
+    <div class="jumbotron">
+        <h1>
+            <strong>Profile</strong>
+        </h1>
+        <h2>Username: {{username}}<br><br></h2>
+        <h2>Preference:</h2>
+        <form action="/profile" method="post">
+            <input type="checkbox" name="meat" value="Meat" checked> Meat<br>
+            <input type="checkbox" name="vegetarian" value="Vegetarian"> Vegetarian<br>
+            <input type="checkbox" name="vegan" value="Vegan"> Vegan<br><br>
+            <input class="btn btn-warning" type="submit" value="Submit">
+        </form><br><br>
 
-    <form action="/password" method="get">
-        <button class="btn btn-primary" type="submit">Change password</button><br><br>
-    </form>
-    <form action="/login" method="get">
-        <button class="btn btn-danger" type="submit">Logout</button>
-    </form>
+        <form action="/password" method="get">
+            <button class="btn btn-primary" type="submit">Change password</button><br><br>
+        </form>
+        <form action="/login" method="get">
+            <button class="btn btn-danger" type="submit">Logout</button>
+        </form>
+    </div>
 {% endblock %}

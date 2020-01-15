@@ -156,10 +156,11 @@ def search():
     return render_template("search.html")
 
 
-@app.route("/results", methods=["GET", "POST"])
+@app.route("/results", methods=["POST"])
 # @login_required
 def results():
-    return print("TODO")
+    print (request.form.get("itemlist"))
+    pass
 
 
 @app.route("/profile", methods=["GET", "POST"])
