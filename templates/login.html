@@ -6,18 +6,27 @@
 {% block class %}login{% endblock %}
 {% block main %}
 <center>
-    <div class="jumbotron">
+    <div class="jumbotron" style="max-width:60%">
+
     <h1 class="display-4">Log in on WhatTheFridge?!</h1>
-    <p class="lead">Discover new recipes!</p>
+    <p class="lead">Discover new recipes now</p>
+
     <div id = "alert_placeholder"></div>
+
     <form action="/login" method="post" id="form">
+
     <div class="form-group">
-        <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text" style= width:50%>
+        <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
     </div>
+
     <div class="form-group">
-        <input autocomplete="off" autofocus class="form-control" name="password" placeholder="Password" type="password" style= width:50%>
+        <input autocomplete="off" autofocus class="form-control" name="password" placeholder="Password" type="password">
     </div>
+
     <button class="btn btn-primary" type="submit">Login</button>
+
     </form>
-</center></div>
+</center>
+
+</div>
 {% endblock %}
