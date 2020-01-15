@@ -24,21 +24,24 @@
 
         <div class="form-group">
             <button class="btn btn-primary" type="submit" id="search">Search</button>
-            <button class="btn btn-primary" id="removelast">Remove last item</button>
-            <button class="btn btn-primary" type="clear" id="clear">Clear items</button>
+            <a href="#" class="btn btn-primary" id="removelast">Remove last item</button>
+            <a href="#" class="btn btn-primary" id="clear">Clear items</a>
         </div>
 </form>
 
     <script src="/static/ingredients.js" type="text/javascript"></script>
     <script>
+        $("#ingredient_input").keydown(function(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                $("#add").click();
+                document.getElementById("#ingredient_input").value = "";
+                }
+
+        });
         $('#ingredient_input').autocomplete({
         source: ingredients
-        });
-        $("#ingredient_input").keyup(function(event) {
-            if (event.keyCode === 13) {
-                $("#add").click();
-            }
-        });
+    });
     </script>
 
     <script>
@@ -67,6 +70,7 @@
         });
 
         $('#clear').on('click', function (e) {
+            item_count = 0;
             var $edit = $("#Itemlist");
             $edit.val("");
         });
