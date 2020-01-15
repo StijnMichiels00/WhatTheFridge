@@ -9,12 +9,12 @@
         <h1>
             <strong>Profile</strong>
         </h1>
-        <h2>Username: {{username}}<br><br></h2>
-        <h2>Preference:</h2>
+        <h3>Username: {{username}}<br><br></h3>
+        <h3>Exclude from search:</h3>
+        <p>Check the box to exclude this ingrediënt from your search</p>
         <form action="/profile" method="post">
-            <input type="checkbox" name="meat" value="Meat" checked> Meat<br>
-            <input type="checkbox" name="vegetarian" value="Vegetarian"> Vegetarian<br>
-            <input type="checkbox" name="vegan" value="Vegan"> Vegan<br><br>
+            <input type="checkbox" name="meat" value="Meat"> Meat<br>
+            <input type="checkbox" name="fish" value="Fish"> Fish<br><br>
             <input class="btn btn-warning" type="submit" value="Submit">
         </form><br><br>
 
