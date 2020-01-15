@@ -19,8 +19,11 @@
 
 <hr>
         <form action="mailto:info@whatthefridge.com" method="post">
+            {% if username %}
             <input style="display:none" name="username" value="{{ username }}" type="text">
                     <p>Your username is: <strong>{{username}}</strong></p>
+            {% endif %}
+
             <button class="btn btn-info" type="submit">I still need help</button>
         </form>
     </div>

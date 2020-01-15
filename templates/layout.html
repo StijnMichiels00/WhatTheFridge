@@ -28,8 +28,11 @@
 
     <body class="{% block class %}{% endblock %}">
       <nav class="navbar navbar-dark navbar-expand-lg align-right" style="background-color:seagreen">
-
+            {% if session.user_id %}
+            <a class="navbar-brand" href="/search"> <span class="red">WhatTheFridge?!</span></a>
+            {% else %}
             <a class="navbar-brand" href="/"> <span class="red">WhatTheFridge?!</span></a>
+            {% endif %}
             <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -46,7 +49,9 @@
                         </li>
                         <li class="nav-item">
                           <a class="nav-link" href="/profile">Profile</a>
-                        </li></ul>
+                        </li>
+                        <li class="nav-item "><a class="nav-link btn btn-danger" href="/login"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+</ul>
                 {% else %}
                     <ul class="navbar-nav ml-auto mt-2">
                         <li class="nav-item"><a class="nav-link" href="/register"><button class="btn btn-info btn-navbar"><i class="fas fa-user"></i> Sign up</button></a></li>
