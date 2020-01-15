@@ -15,9 +15,12 @@
         <input type="checkbox" name="vegetarian" value="Vegetarian"> Vegetarian<br>
         <input type="checkbox" name="vegan" value="Vegan"> Vegan<br><br>
         <input class="btn btn-warning" type="submit" value="Submit">
-    </form><br>
+    </form><br><br>
 
-    <form action="/password" method="post">
-        <button class="btn btn-primary" type="submit">Change password</button>
+    <form action="/password" method="get">
+        <button class="btn btn-primary" type="submit">Change password</button><br><br>
+    </form>
+    <form action="/login" method="get">
+        <button class="btn btn-danger" type="submit">Logout</button>
     </form>
 {% endblock %}

@@ -99,15 +99,16 @@ def password():
 
         # Wachtwoord check
         if check_password_hash(code, password) == False:
-            return flash("Password incorrect")
+            flash("Password incorrect")
+            return render_template("password.html")
 
         # Veranderen wachtwoord in database
         else:
             db.execute("UPDATE users SET hash=:p WHERE id=:d", p=newpassword, d=session["user_id"])
-            return render_template("password.html")
+            return render_template("index.html")
 
     else:
-        return render_template("profile.html")
+        return render_template("password.html")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
