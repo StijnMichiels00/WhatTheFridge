@@ -64,6 +64,13 @@
   -o-background-size: cover;
 }
 
+
+.register {
+  background-image: url("register.jpg");
+  background-repeat: no-repeat;
+  background-size :cover;
+}
+
 .profile {
   background: url('/static/william-felker-fqkrXYMosT4-unsplash.jpg') no-repeat center center fixed;
   -webkit-background-size: cover;
