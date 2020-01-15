@@ -24,7 +24,7 @@
 
         <div class="form-group">
             <button class="btn btn-primary" type="submit" id="search">Search</button>
-            <!--<button class="btn btn-primary" type="removelast" id="clear">Remove last item</button>-->
+            <button class="btn btn-primary" type="iets" id="removelast">Remove last added item</button>
             <button class="btn btn-primary" type="clear" id="clear">Clear items</button>
         </div>
 </form>
@@ -37,6 +37,9 @@
     </script>
 
     <script>
+
+        var previous_list;
+
         // Create a new list item when clicking on the "Add" button
         $('#add').on('click', function (e) {
           var li = document.createElement("li");
@@ -45,9 +48,11 @@
           li.appendChild(t);
           if (inputValue === '') {
             alert("You must write something!");
-          } else {
+          }
+          else {
             var $edit = $("#Itemlist");
             var curValue = $edit.val();
+            previous_list = $edit.val();
             var newValue = curValue + inputValue + "\n";
             $edit.val(newValue);
           }
@@ -59,12 +64,10 @@
             $edit.val("");
         });
 
-        // $('#removelast').on('click', function (e) {
-        //     var $edit = $("#Itemlist");
-        //     var curValue = $edit.val();
-        //     var newValue = curValue - inputValue - "\n";
-        //     $edit.val(newValue);
-        // });
+        $('#removelast').on('click', function (e) {
+            var $edit = $("#Itemlist");
+            $edit.val(previous_list);
+        });
 
     </script>
 
