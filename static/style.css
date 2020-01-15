@@ -63,3 +63,9 @@
   background-size: cover;
   -o-background-size: cover;
 }
+
+.register {
+  background-image: url("register.jpg");
+  background-repeat: no-repeat;
+  background-size :cover;
+}
