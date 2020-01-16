@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Search Results
+{% endblock %}
+
+{% block main %}
+<h1 align="left">Recipes</h1>
+    <table class="table table-striped table-bordered" style="width:100%; text-align:left;">
+    {% for recipe in recipes %}
+      <tr>
+        <td>{{ recipe.name }}</td>
+      </tr>
+    {% endfor %}
+    </table>
+
+{% endblock %}

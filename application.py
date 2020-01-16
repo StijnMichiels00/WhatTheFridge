@@ -170,7 +170,8 @@ def support():
 @app.route("/results", methods=["POST"])
 # @login_required
 def results():
-    print (request.form.get("itemlist"))
+    if request.form.get("itemlist"):
+        errorhandle(400,"Something went wrong...")
     pass
 
 
@@ -178,28 +179,46 @@ def results():
 # @login_required
 def profile():
     username = [x["username"] for x in (db.execute("SELECT username FROM users WHERE id=:q", q=session["user_id"]))][0]
-    check = db.execute("SELECT * FROM users WHERE id=:n", n=session["user_id"])
+    check = [x["favorite"] for x in (db.execute("SELECT * FROM favorites WHERE user_id=:n", n=session["user_id"]))]
+    box_meat = []
+    box_fish = []
+    box_all = []
+    if "Meat" in check:
+        box_meat.append("checked")
+        box_meat = box_meat[0]
+    if "Fish" in check:
+        box_fish.append("checked")
+        box_fish = box_fish[0]
+    if "Meat'Fish" in check:
+        box_all.append("checked")
+        box_all = box_all[0]
 
     if request.method == "POST":
         meat = request.form.get("meat")
         fish = request.form.get("fish")
 
         preferences = []
+
         if meat == "Meat":
             preferences.append(meat)
 
         if fish == "Fish":
             preferences.append(fish)
-        print(preferences)
-        if preferences not in check:
+
+        if check == "Meat'Fish":
+            preference.append("Meat'Fish")
+
+        if len(check) == 0:
             db.execute("INSERT INTO favorites (favorite, user_id) VALUES (:favorite, :user_id)", favorite=preferences, user_id=session["user_id"])
 
         else:
-            db.execute("DELETE favorite FROM favorites WHERE user_id=:d", d=session["user_id"])
-            db.execute("INSERT INTO favorites (favorite, user_id) VALUES (:favorite, :user_id)", favorite=preferences, user_id=session["user_id"])
-        return render_template("index.html")
+            db.execute("UPDATE favorites SET favorite=:p WHERE user_id=:d", p=preferences, d=session["user_id"])
+            # db.execute("DELETE FROM favorites WHERE user_id=:d", d=session["user_id"])
+            # db.execute("INSERT INTO favorites (favorite, user_id) VALUES (:favorite, :user_id)", favorite=preferences, user_id=session["user_id"])
+        return render_template("index.html", preferences=preferences)
+
     else:
-        return render_template("profile.html", username=username)
+        return render_template("profile.html", username=username, box_meat=box_meat, box_fish=box_fish, box_all=box_all)
 
 
 @app.route("/favorites", methods=["GET"])
