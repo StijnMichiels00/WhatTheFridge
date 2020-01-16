@@ -178,7 +178,7 @@ def results():
 
 
 @app.route("/profile", methods=["GET", "POST"])
-@login_required
+# @login_required
 def profile():
     # Retrieve username from database
     username = [x["username"] for x in (db.execute("SELECT username FROM users WHERE id=:q", q=session["user_id"]))][0]
@@ -188,6 +188,10 @@ def profile():
     box_meat = []
     box_fish = []
     box_all = []
+
+    saved = request.args.get("id")
+    print(saved)
+    db.execute("INSERT INTO saved (recipe, id) VALUES (:recipe, :d)", recipe=saved, d=session["user_id"])
 
     # If user selected meat, keep meat selected
     if "Meat" in check:
@@ -216,6 +220,8 @@ def profile():
         #     print("test")
         #     session.clear()
 
+        recipes = db.execute("SELECT * FROM saved WHERE id=:n", n=session["user_id"])
+        print(recipes)
         # If meat selected, add meat to preferences
         if meat == "Meat":
             preferences.append(meat)
