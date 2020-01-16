@@ -189,6 +189,10 @@ def profile():
     box_fish = []
     box_all = []
 
+    saved = request.args.get("id")
+    print(saved)
+    db.execute("INSERT INTO saved (recipe, id) VALUES (:recipe, :d)", recipe=saved, d=session["user_id"])
+
     # If user selected meat, keep meat selected
     if "Meat" in check:
         box_meat.append("checked")
@@ -207,9 +211,17 @@ def profile():
     if request.method == "POST":
         meat = request.form.get("meat")
         fish = request.form.get("fish")
-
         preferences = []
 
+        # Log out button
+        # logout = request.form.get("logout")
+        # print(logout)
+        # if logout == "logout":
+        #     print("test")
+        #     session.clear()
+
+        recipes = db.execute("SELECT * FROM saved WHERE id=:n", n=session["user_id"])
+        print(recipes)
         # If meat selected, add meat to preferences
         if meat == "Meat":
             preferences.append(meat)
@@ -227,8 +239,7 @@ def profile():
 
         else:
             db.execute("UPDATE favorites SET favorite=:p WHERE user_id=:d", p=preferences, d=session["user_id"])
-            # db.execute("DELETE FROM favorites WHERE user_id=:d", d=session["user_id"])
-            # db.execute("INSERT INTO favorites (favorite, user_id) VALUES (:favorite, :user_id)", favorite=preferences, user_id=session["user_id"])
+
         return render_template("index.html", preferences=preferences)
 
     else:
