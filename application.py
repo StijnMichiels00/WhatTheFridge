@@ -167,21 +167,24 @@ def results():
 # @login_required
 def profile():
     username = [x["username"] for x in (db.execute("SELECT username FROM users WHERE id=:q", q=session["user_id"]))][0]
-    #check = db.execute("SELECT voorkeur FROM users WHERE id:n", n=session["user_id"])
-    #print(check)
+    check = db.execute("SELECT * FROM users WHERE id=:n", n=session["user_id"])
+    print(check)
     if request.method == "POST":
         meat = request.form.get("meat")
         fish = request.form.get("fish")
+
         preferences = []
-        if meat == "meat":
+        if meat == "Meat":
             preferences.append(meat)
 
-        if fish == "fish":
+        if fish == "Fish":
             preferences.append(fish)
 
-        #if preferences not in check:
-        #    db.execute("INSERT INTO users (voorkeur) VALUES (:voorkeur)", voorkeur=preferences)
+        if preferences not in check:
+            db.execute("INSERT INTO users (voorkeur) VALUES (:voorkeur)", voorkeur=preferences)
 
+        else:
+            db.execute("UPDATE users SET voorkeur=:s WHERE id = :d", s=preferences, d=session["user_id"])
         return render_template("index.html")
     else:
         return render_template("profile.html", username=username)
