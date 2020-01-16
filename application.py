@@ -206,7 +206,7 @@ def profile():
             preferences.append(fish)
 
         if check == "Meat'Fish":
-            preference.append("Meat'Fish")
+            preferences.append("Meat'Fish")
 
         if len(check) == 0:
             db.execute("INSERT INTO favorites (favorite, user_id) VALUES (:favorite, :user_id)", favorite=preferences, user_id=session["user_id"])

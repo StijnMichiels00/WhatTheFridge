@@ -89,6 +89,7 @@
   background-size: cover;
   -o-background-size: cover;
 }
+
 .support {
   background: url('/static/support.jpg') no-repeat center center fixed;
   -webkit-background-size: cover;
