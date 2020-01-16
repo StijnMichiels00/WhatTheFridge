@@ -170,7 +170,8 @@ def support():
 @app.route("/results", methods=["POST"])
 # @login_required
 def results():
-    print (request.form.get("itemlist"))
+    if request.form.get("itemlist"):
+        errorhandle(400,"Something went wrong...")
     pass
 
 

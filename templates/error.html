@@ -3,19 +3,15 @@
 {% block title %}
     Oh no!
 {% endblock %}
-
+{% block class %}error{% endblock %}
 {% block main %}
+<div class="jumbotron">
 <h1 class="display-4">Something went wrong...</h1>
-<hr>
 <br>
 
-
-<img src="static/error.gif" alt="exploding melon">
-
-</p><p class="text-muted">
-<strong>Code: </strong> {{ code }}<br>
-<strong>Message: </strong> {{ message }} <br>
-<h3><a href="support">Get support</a></h3><p>
 </p>
-
+<strong>Code: </strong> {{ code }}<br>
+<strong>Message: </strong> {{ message }} <br><br>
+<a class="btn btn-info" href="/support">Get support</a>
+</div>
 {% endblock %}
