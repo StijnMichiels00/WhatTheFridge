@@ -154,12 +154,12 @@ def login():
         return render_template("login.html")
 
 
-@app.route("/search", methods=["GET", "POST"])
+@app.route("/search", methods=["GET"])
 # @login_required
 def search():
-    if request.method == "POST":
-        pass
-
+    if request.args.get("ingredients"):
+        ingre = request.args.get("ingredients").replace(",","\n")
+        return render_template("search.html",ingredients=ingre)
     return render_template("search.html")
 
 
@@ -177,8 +177,8 @@ def support():
 # @login_required
 def results():
     ingredients=request.form.get("itemlist")
-    recipes = lookup(ingredients)
-    return render_template("results.html", ingredients=recipes[1], recipes=recipes[0], recipe_count=len(recipes[1]))
+    recipes_info = lookup(ingredients)
+    return render_template("results.html", recipes=recipes_info[0], ingredients=recipes_info[1], recipe_count=len(recipes_info[0]))
 
 
 
