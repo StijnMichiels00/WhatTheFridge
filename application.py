@@ -195,7 +195,7 @@ def profile():
             db.execute("INSERT INTO favorites (favorite, user_id) VALUES (:favorite, :user_id)", favorite=preferences, user_id=session["user_id"])
 
         else:
-            db.execute("DELETE FROM favorites WHERE user_id=:d", d=session["user_id"])
+            db.execute("DELETE favorite FROM favorites WHERE user_id=:d", d=session["user_id"])
             db.execute("INSERT INTO favorites (favorite, user_id) VALUES (:favorite, :user_id)", favorite=preferences, user_id=session["user_id"])
         return render_template("index.html")
     else:
