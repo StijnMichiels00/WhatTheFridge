@@ -10,14 +10,17 @@
             <strong>Profile</strong>
         </h1>
         <h3>Username: {{username}}<br><br></h3>
-        <h3>Exclude from search:</h3>
-        <p>Check the box to exclude this ingrediënt from your search</p>
-        <form action="/profile" method="post">
-            <input type="checkbox" name="meat" value="Meat"> Meat<br>
-            <input type="checkbox" name="fish" value="Fish"> Fish<br><br>
-            <input class="btn btn-warning" type="submit" value="Submit">
-        </form><br><br>
-
+        <div>
+            <hr style="border: 1px solid white">
+            <h3>Exclude from search:</h3>
+            <p>Check the box to exclude this ingredient from your search</p>
+            <form action="/profile" method="post">
+                <input type="checkbox" name="meat" value="Meat" {{box_meat}} {{box_all}}> Meat<br>
+                <input type="checkbox" name="fish" value="Fish" {{box_fish}} {{box_all}}> Fish<br><br>
+                <input class="btn btn-warning" type="submit" value="Submit exclusions">
+            </form>
+            <hr style="border: 1px solid white">
+        </div><br><br>
         <form action="/password" method="get">
             <button class="btn btn-primary" type="submit">Change password</button><br><br>
         </form>
