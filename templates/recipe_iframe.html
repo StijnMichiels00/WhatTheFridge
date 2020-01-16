@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- documentation at http://getbootstrap.com/docs/4.1/, alternative themes at https://bootswatch.com/ -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+        <!-- FontAwesome icons -->
+        <script src="https://kit.fontawesome.com/31b463b695.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="/static/style.css">
+
+        <!-- https://www.iconfinder.com/ -->
+        <link href="/static/favicon.ico" rel="icon">
+        <link rel="shortcut icon" href="/static/favicon.ico" />
+
+        <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+        <title>WTF - View Recipe</title>
+
+    </head>
+
+    <body class="{% block class %}{% endblock %}">
+      <nav class="navbar fixed-top navbar-dark navbar-expand-lg align-right" style="background-color:seagreen">
+            {% if session.user_id %}
+            <a class="navbar-brand" href="/search"> <span class="red">WhatTheFridge?!</span></a>
+            {% else %}
+            <a class="navbar-brand" href="/"> <span class="red">WhatTheFridge?!</span></a>
+            {% endif %}
+            <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar">
+                {% if session.user_id %}
+                <ul class="navbar-nav mr-auto">
+                <li class="nav-item"><a class="nav-link" href="javascript:window.history.go(-1);"><button class="btn btn-info btn-navbar"><i class="fas fa-arrow-circle-left"></i> Back to results</button></a></li></ul>
+                      <ul class="navbar-nav">
+                        <li class="nav-item">
+                          <a class="nav-link" href="/favorites">Favourites</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="/support">Support</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="/profile">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="/addfavourite?id={{id}}"><button class="btn btn-info btn-navbar"><i class="fas fa-star"></i> Save</button></a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="/share?id={{id}}"><button class="btn btn-info btn-navbar"><i class="fas fa-share-alt"></i> Share</button></a>
+                        </li>
+</ul>
+                {% else %}
+                    <ul class="navbar-nav ml-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/register"><button class="btn btn-info btn-navbar"><i class="fas fa-user"></i> Sign up</button></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/login"><button class="btn btn-info btn-navbar"><i class="fas fa-sign-in-alt"></i> Login</button></a></li>
+                    </ul>
+                {% endif %}
+            </div>
+        </nav>
+
+<iframe src="{{url}}" style="position:absolute; height:100%; width:100%"></iframe>
+
+    </body>
+
+</html>
+

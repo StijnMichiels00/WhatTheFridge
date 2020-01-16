@@ -1,5 +1,6 @@
 import os
 import datetime
+import re
 from cs50 import SQL
 from flask import Flask, flash, jsonify, redirect, render_template, request, session
 from flask_session import Session
@@ -7,7 +8,7 @@ from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import login_required, errorhandle, lookup
+from helpers import login_required, errorhandle, lookup, lookup_recipe
 
 # Configure application
 app = Flask(__name__)
@@ -170,9 +171,11 @@ def support():
 @app.route("/results", methods=["POST"])
 # @login_required
 def results():
-    if request.form.get("itemlist"):
-        errorhandle(400,"Something went wrong...")
-    pass
+    ingredients=request.form.get("itemlist")
+    recipes = lookup(ingredients)
+    recipes[1].replace(',', ',')
+    return render_template("results.html", ingredients=recipes[1], recipes=recipes[0], recipe_count=len(recipes[1]))
+
 
 
 @app.route("/profile", methods=["GET", "POST"])
@@ -207,6 +210,13 @@ def profile():
 # @login_required
 def favorites():
     return print("TODO")
+
+@app.route("/recipe", methods=["GET"])
+# @login_required
+def recipe():
+    id=request.args.get("id")
+    recipe = lookup_recipe(id)
+    return render_template("recipe_iframe.html", url=recipe['sourceUrl'], id=id)
 
 
 @app.route("/help", methods=["GET"])

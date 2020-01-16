@@ -6,10 +6,21 @@
 
 {% block main %}
 <h1 align="left">Recipes</h1>
+<p class="lead">Searching with: <i>{{ ingredients }}</i></p>
+<p class="lead"><strong>Showing: {{ recipe_count }} results</strong></p>
+
     <table class="table table-striped table-bordered" style="width:100%; text-align:left;">
+      <tr>
+      <th width="25%">Image</th>
+      <th width="75%">Name</th>
+
+      </tr>
     {% for recipe in recipes %}
       <tr>
-        <td>{{ recipe.name }}</td>
+        <td><a href="/recipe?id={{ recipe.id }}"><img src={{recipe.image}} alt="{{ recipe.title }}" class="img-thumbnail"></a> </td>
+        <td><a href="/recipe?id={{ recipe.id }}">{{ recipe.title }}</a></td>
+
+
       </tr>
     {% endfor %}
     </table>
