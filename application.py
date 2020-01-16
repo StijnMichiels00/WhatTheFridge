@@ -179,7 +179,7 @@ def results():
 def profile():
     username = [x["username"] for x in (db.execute("SELECT username FROM users WHERE id=:q", q=session["user_id"]))][0]
     check = db.execute("SELECT * FROM users WHERE id=:n", n=session["user_id"])
-    print(check)
+
     if request.method == "POST":
         meat = request.form.get("meat")
         fish = request.form.get("fish")
@@ -190,12 +190,13 @@ def profile():
 
         if fish == "Fish":
             preferences.append(fish)
-
+        print(preferences)
         if preferences not in check:
-            db.execute("INSERT INTO users (voorkeur) VALUES (:voorkeur)", voorkeur=preferences)
+            db.execute("INSERT INTO favorites (favorite, user_id) VALUES (:favorite, :user_id)", favorite=preferences, user_id=session["user_id"])
 
         else:
-            db.execute("UPDATE users SET voorkeur=:s WHERE id = :d", s=preferences, d=session["user_id"])
+            db.execute("DELETE FROM favorites WHERE user_id=:d", d=session["user_id"])
+            db.execute("INSERT INTO favorites (favorite, user_id) VALUES (:favorite, :user_id)", favorite=preferences, user_id=session["user_id"])
         return render_template("index.html")
     else:
         return render_template("profile.html", username=username)
