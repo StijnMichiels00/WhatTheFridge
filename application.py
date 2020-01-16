@@ -65,6 +65,11 @@ def register():
         user_taken = db.execute("SELECT * FROM users WHERE username = :username",
                                 username=request.form.get("username"))
 
+        # Checks if username is a letter or a number for safety reasons
+        if not (request.form.get("username")).isdigit() and not (request.form.get("username")).isalpha():
+            flash("Fill in a valid username")
+            return render_template("register.html")
+
         # Return error message if username is already taken
         if len(user_taken) == 1:
             flash("This username has been taken. Choose something else...")
