@@ -70,13 +70,14 @@ def register():
             return render_template("register.html")
 
         # Insert username and password into database
-        db.execute("INSERT INTO users (username, hash) VALUES (:username, :Hash)",
-                   username=request.form.get("username"), Hash=generate_password_hash(request.form.get("password"), method='pbkdf2:sha256', salt_length=8))
+        user = db.execute("INSERT INTO users (username, hash) VALUES (:username, :hash)",
+                   username=request.form.get("username"), hash=generate_password_hash(request.form.get("password"), method='pbkdf2:sha256', salt_length=8))
 
         # Remember which user is logged in
-        session["user_id"] = user_taken[0]["id"]
+        session["user_id"] = user
 
         # Redirect to our search page
+        flash("You are now registered.")
         return redirect("/search")
 
     else:
@@ -154,6 +155,16 @@ def search():
         pass
 
     return render_template("search.html")
+
+
+@app.route("/support", methods=["GET"])
+# @login_required
+def support():
+    if not session:
+        return render_template("support.html")
+    else:
+        username = db.execute("SELECT username FROM users WHERE id=:id", id=session["user_id"])[0]["username"]
+        return render_template("support.html", username=username)
 
 
 @app.route("/results", methods=["POST"])
