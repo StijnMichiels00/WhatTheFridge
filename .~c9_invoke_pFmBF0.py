@@ -173,6 +173,7 @@ def support():
 def results():
     ingredients=request.form.get("itemlist")
     recipes = lookup(ingredients)
+    recipes[1].replace(',', ',')
     return render_template("results.html", ingredients=recipes[1], recipes=recipes[0], recipe_count=len(recipes[1]))
 
 
