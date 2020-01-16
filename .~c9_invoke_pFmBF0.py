@@ -173,12 +173,13 @@ def support():
 def results():
     ingredients=request.form.get("itemlist")
     recipes = lookup(ingredients)
+    recipes[1].replace(',', ',')
     return render_template("results.html", ingredients=recipes[1], recipes=recipes[0], recipe_count=len(recipes[1]))
 
 
 
 @app.route("/profile", methods=["GET", "POST"])
-@login_required
+# @login_required
 def profile():
     # Retrieve username from database
     username = [x["username"] for x in (db.execute("SELECT username FROM users WHERE id=:q", q=session["user_id"]))][0]
@@ -207,14 +208,8 @@ def profile():
     if request.method == "POST":
         meat = request.form.get("meat")
         fish = request.form.get("fish")
-        preferences = []
 
-        # Log out button
-        # logout = request.form.get("logout")
-        # print(logout)
-        # if logout == "logout":
-        #     print("test")
-        #     session.clear()
+        preferences = []
 
         # If meat selected, add meat to preferences
         if meat == "Meat":
@@ -233,7 +228,8 @@ def profile():
 
         else:
             db.execute("UPDATE favorites SET favorite=:p WHERE user_id=:d", p=preferences, d=session["user_id"])
-
+            # db.execute("DELETE FROM favorites WHERE user_id=:d", d=session["user_id"])
+            # db.execute("INSERT INTO favorites (favorite, user_id) VALUES (:favorite, :user_id)", favorite=preferences, user_id=session["user_id"])
         return render_template("index.html", preferences=preferences)
 
     else:

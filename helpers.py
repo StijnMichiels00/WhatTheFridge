@@ -37,11 +37,12 @@ def lookup(ingredients):
 
     https://spoonacular.com/food-api/docs#Search-Recipes-by-Ingredients
     """
-    ingredients_string = ','.join(map(str, ingredients))
+    ingredients_string = ingredients.splitlines()
+    ingredients = ','.join(ingredients_string)
 
     try:
         api_key = "59757b939d834ee0aa5a09827389b5f6"
-        response = requests.get(f"https://api.spoonacular.com/recipes/findByIngredients?ingredients={(ingredients_string)}/?apiKey={api_key}")
+        response = requests.get(f"https://api.spoonacular.com/recipes/findByIngredients?ingredients={(ingredients)}&apiKey={api_key}")
         response.raise_for_status()
     except requests.RequestException:
         return None
@@ -49,7 +50,28 @@ def lookup(ingredients):
     # Parse response
     try:
         recipes = response.json()
-        return recipes
+        return recipes, ingredients
+
+    except (KeyError, TypeError, ValueError):
+        return None
+
+def lookup_recipe(id):
+    """
+    Lookup recipes by id
+
+    https://spoonacular.com/food-api/docs#Search-Recipes-by-Ingredients
+    """
+    try:
+        api_key = "59757b939d834ee0aa5a09827389b5f6"
+        response = requests.get(f"https://api.spoonacular.com/recipes/{id}/information?apiKey={api_key}")
+        response.raise_for_status()
+    except requests.RequestException:
+        return None
+
+    # Parse response
+    try:
+        recipeinfo = response.json()
+        return recipeinfo
 
     except (KeyError, TypeError, ValueError):
         return None
