@@ -180,7 +180,16 @@ def support():
 # @login_required
 def results():
     ingredients=request.form.get("itemlist")
+    if not ingredients:
+        flash("Provide at least one ingredient.", "warning")
+        return redirect("/search")
     recipes_info = lookup(ingredients)
+    if recipes_info == None:
+        flash("Something went wrong. Get in touch with us for more information (402).", "error")
+        return redirect("/search")
+    if len(recipes_info[0]) == 0:
+        flash("We couldn't find any results.", "error")
+        return redirect("/search")
     return render_template("results.html", recipes=recipes_info[0], ingredients=recipes_info[1], recipe_count=len(recipes_info[0]))
 
 
@@ -267,8 +276,10 @@ def favorites():
 # @login_required
 def recipe():
     id=request.args.get("id")
-    recipe = lookup_recipe(id)
-    return render_template("recipe_iframe.html", url=recipe['sourceUrl'], id=id)
+    recipeinfo = lookup_recipe(id)
+    url = recipeinfo["sourceUrl"]
+    url = url.replace('http://','https://')
+    return render_template("recipe_iframe.html", url=url, recipeinfo=recipeinfo, id=id)
 
 
 @app.route("/help", methods=["GET"])
