@@ -66,10 +66,8 @@ def register():
                                 username=request.form.get("username"))
 
         # Checks if username is a letter or a number for safety reasons
-
-        if not (request.form.get("username")).isdigit() or not (request.form.get("username")).isalpha():
+        if not (request.form.get("username")).isdigit() and not (request.form.get("username")).isalpha():
             flash("Fill in a username with a letter or number!", "warning")
-
             return render_template("register.html")
 
         # Return error message if username is already taken
