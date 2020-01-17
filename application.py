@@ -64,9 +64,9 @@ def register():
         # Checks databse if username is already taken
         user_taken = db.execute("SELECT * FROM users WHERE username = :username",
                                 username=request.form.get("username"))
-
+        print(type(request.form.get("username")))
         # Checks if username is a letter or a number for safety reasons
-        if not (request.form.get("username")).isdigit() and not (request.form.get("username")).isalpha():
+        if not (request.form.get("username")).isdigit():
             flash("Fill in a valid username")
             return render_template("register.html")
 
@@ -185,6 +185,7 @@ def results():
 @app.route("/profile", methods=["GET", "POST"])
 # @login_required
 def profile():
+
     # Retrieve username from database
     username = [x["username"] for x in (db.execute("SELECT username FROM users WHERE id=:q", q=session["user_id"]))][0]
     check = [x["favorite"] for x in (db.execute("SELECT * FROM favorites WHERE user_id=:n", n=session["user_id"]))]
@@ -196,7 +197,8 @@ def profile():
 
     saved = request.args.get("id")
     print(saved)
-    db.execute("INSERT INTO saved (recipe, id) VALUES (:recipe, :d)", recipe=saved, d=session["user_id"])
+    if saved != None:
+        db.execute("INSERT INTO saved (recipe, id) VALUES (:recipe, :d)", recipe=saved, d=session["user_id"])
 
     # If user selected meat, keep meat selected
     if "Meat" in check:
@@ -219,11 +221,14 @@ def profile():
         preferences = []
 
         # Log out button
-        # logout = request.form.get("logout")
-        # print(logout)
-        # if logout == "logout":
-        #     print("test")
-        #     session.clear()
+        logout = request.form.get("log_out")
+        print(logout)
+        if logout is not None:
+            print("test")
+            session.clear()
+            flash("You are now logged out.", "success")
+            return redirect("/")
+
 
         recipes = db.execute("SELECT * FROM saved WHERE id=:n", n=session["user_id"])
         print(recipes)
