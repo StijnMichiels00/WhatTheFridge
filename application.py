@@ -261,9 +261,9 @@ def profile():
         return render_template("profile.html", username=username, box_meat=box_meat, box_fish=box_fish, box_all=box_all)
 
 
-@app.route("/addfavourite", methods=["GET"])
+@app.route("/addfavorite", methods=["GET"])
 # @login_required
-def addfavourite():
+def addfavorite():
     select0 = db.execute("SELECT recipe FROM saved WHERE id=:d", d=session["user_id"])
     select = []
     fav0 = db.execute("SELECT recipe FROM saved WHERE id=:d", d=session["user_id"])
