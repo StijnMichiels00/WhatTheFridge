@@ -41,7 +41,7 @@ def lookup(ingredients):
     ingredients = ','.join(ingredients_string)
 
     try:
-        api_key = "59757b939d834ee0aa5a09827389b5f6"
+        api_key = "c413253e08574e40ba92563a5126e415"
         response = requests.get(f"https://api.spoonacular.com/recipes/findByIngredients?ingredients={(ingredients)}&apiKey={api_key}")
         response.raise_for_status()
     except requests.RequestException:
@@ -62,7 +62,7 @@ def lookup_recipe(id):
     https://spoonacular.com/food-api/docs#Search-Recipes-by-Ingredients
     """
     try:
-        api_key = "59757b939d834ee0aa5a09827389b5f6"
+        api_key = "c413253e08574e40ba92563a5126e415"
         response = requests.get(f"https://api.spoonacular.com/recipes/{id}/information?apiKey={api_key}")
         response.raise_for_status()
     except requests.RequestException:
