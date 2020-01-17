@@ -11,11 +11,11 @@
         </h1>
     <table class="table table-striped" style="widt:100%">
       <tr>
-        <th>Recipe</th>
+        <th style="color:seagreen">Recipe</th>
       </tr>
-      {% for number in select %}
+      {% for name, image in titleimg.items() %}
       <tr>
-        <td>{{ number }}</td>
+        <td><img src={{ image }} class="img-thumbnail">{{ name }}</td>
       </tr>
       {% endfor %}
     </table>
