@@ -43,22 +43,22 @@ def register():
     if request.method == "POST":
         # Must provide username
         if not request.form.get("username"):
-            flash("Your username can't be empty.")
+            flash("Your username can't be empty.", "warning")
             return render_template("register.html")
 
         # Must provide password
         elif not request.form.get("password"):
-            flash("Your password can't be empty.")
+            flash("Your password can't be empty.", "warning")
             return render_template("register.html")
 
         # Must provide confirmation
         elif not request.form.get("confirmation"):
-            flash("Your password confirmation can't be empty.")
+            flash("Your password confirmation can't be empty.", "warning")
             return render_template("register.html")
 
         # Password and confirmation have to match to successfully register
         elif request.form.get("password") != request.form.get("confirmation"):
-            flash("Your password and confimation don't match.")
+            flash("Your password and confimation don't match.", "warning")
             return render_template("register.html")
 
         # Checks databse if username is already taken
@@ -66,13 +66,18 @@ def register():
                                 username=request.form.get("username"))
         print(type(request.form.get("username")))
         # Checks if username is a letter or a number for safety reasons
+<<<<<<< HEAD
         if not (request.form.get("username")).isdigit():
             flash("Fill in a valid username")
+=======
+        if not (request.form.get("username")).isdigit() and not (request.form.get("username")).isalpha():
+            flash("Fill in a valid username", "warning")
+>>>>>>> a43ad60084eaa89adb13946a3bfe276c6a52bbce
             return render_template("register.html")
 
         # Return error message if username is already taken
         if len(user_taken) == 1:
-            flash("This username has been taken. Choose something else...")
+            flash("This username has been taken. Choose something else...", "warning")
             return render_template("register.html")
 
         # Insert username and password into database
@@ -83,7 +88,7 @@ def register():
         session["user_id"] = user
 
         # Redirect to our search page
-        flash("You are now registered.")
+        flash("Your account has been created", "success")
         return redirect("/search")
 
     else:
@@ -106,7 +111,7 @@ def password():
 
         # Wachtwoord check
         if check_password_hash(code, password) == False:
-            flash("Password incorrect")
+            flash("Password incorrect", "warning")
             return render_template("password.html")
 
         # Veranderen wachtwoord in database
@@ -127,12 +132,12 @@ def login():
 
         # Must provide a username
         if not request.form.get("username"):
-            flash("Your username can't be empty.")
+            flash("Your username can't be empty.", "warning")
             return render_template("login.html")
 
         # Must provide a password
         elif not request.form.get("password"):
-            flash("Your password can't be empty.")
+            flash("Your password can't be empty.", "warning")
             return render_template("login.html")
 
         # Checks databse if username is already taken
@@ -141,13 +146,14 @@ def login():
 
         # Checks if username is in database and if password corresponds with that user
         if len(user_taken) != 1 or not check_password_hash(user_taken[0]["hash"], request.form.get("password")):
-            flash("Invalid username and/or password.")
+            flash("Invalid username and/or password.", "warning")
             return render_template("login.html")
 
         # Remember which user has logged in
         session["user_id"] = user_taken[0]["id"]
 
         # Redirect to our search page
+        flash("Welcome back, " + request.form.get("username") + "! You are now logged in.", "success")
         return redirect("/search")
 
     else:
