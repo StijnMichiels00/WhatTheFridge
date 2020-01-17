@@ -198,11 +198,6 @@ def profile():
     box_fish = []
     box_all = []
 
-    saved = request.args.get("id")
-    print(saved)
-    if saved != None:
-        db.execute("INSERT INTO saved (recipe, id) VALUES (:recipe, :d)", recipe=saved, d=session["user_id"])
-
     # If user selected meat, keep meat selected
     if "Meat" in check:
         box_meat.append("checked")
@@ -258,16 +253,29 @@ def profile():
         return render_template("profile.html", username=username, box_meat=box_meat, box_fish=box_fish, box_all=box_all)
 
 
-@app.route("/favorites", methods=["GET"])
+@app.route("/addfavourite", methods=["GET"])
 # @login_required
-def favorites():
-    return print("TODO")
-
+def addfavourite():
+    select0 = db.execute("SELECT recipe FROM saved WHERE id=:d", d=session["user_id"])
+    select = []
+    for recipe in select0:
+        select.append(recipe["recipe"])
+    saved = request.args.get("id")
+    if saved is not None:
+        db.execute("INSERT INTO saved (recipe, id) VALUES (:recipe, :d)", recipe=saved, d=session["user_id"])
+        select0 = db.execute("SELECT recipe FROM saved WHERE id=:d", d=session["user_id"])
+        select = []
+        for recipe in select0:
+            select.append(recipe["recipe"])
+        return render_template("favorite.html", select=select)
+    else:
+        return render_template("favorite.html", select=select)
 @app.route("/recipe", methods=["GET"])
 # @login_required
 def recipe():
     id=request.args.get("id")
     recipe = lookup_recipe(id)
+
     return render_template("recipe_iframe.html", url=recipe['sourceUrl'], id=id)
 
 

@@ -1,3 +1,4 @@
+
 .jumbotron {
     background-color:rgba(0, 0, 0, 0.6);
     color:white;
@@ -118,9 +119,10 @@
   background-size: cover;
   -o-background-size: cover;
 }
-
-.alert-message {
-  color: #31708f;
-  background-color: #d9edf7;
-  border-color: #bce8f1;
+.favorite {
+  background: url('/static/favorite.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
 }
