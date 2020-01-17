@@ -273,6 +273,7 @@ def addfavourite():
     for recipe in fav:
         print(recipe)
         recipes_info = lookup_recipe(recipe)
+        print(recipes_info)
 
     for recipe in select0:
         select.append(recipe["recipe"])
