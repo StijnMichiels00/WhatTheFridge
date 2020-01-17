@@ -256,6 +256,15 @@ def profile():
 def addfavourite():
     select0 = db.execute("SELECT recipe FROM saved WHERE id=:d", d=session["user_id"])
     select = []
+    fav0 = db.execute("SELECT recipe FROM saved WHERE id=:d", d=session["user_id"])
+    fav = []
+    for recipe in fav0:
+        fav.append(recipe["recipe"])
+
+    for recipe in fav:
+        print(recipe)
+        recipes_info = lookup_recipe(recipe)
+
     for recipe in select0:
         select.append(recipe["recipe"])
     saved = request.args.get("id")
@@ -268,6 +277,7 @@ def addfavourite():
         return render_template("favorite.html", select=select)
     else:
         return render_template("favorite.html", select=select)
+
 @app.route("/recipe", methods=["GET"])
 # @login_required
 def recipe():
