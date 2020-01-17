@@ -64,15 +64,12 @@ def register():
         # Checks databse if username is already taken
         user_taken = db.execute("SELECT * FROM users WHERE username = :username",
                                 username=request.form.get("username"))
-        print(type(request.form.get("username")))
+
         # Checks if username is a letter or a number for safety reasons
-<<<<<<< HEAD
-        if not (request.form.get("username")).isdigit():
-            flash("Fill in a valid username")
-=======
-        if not (request.form.get("username")).isdigit() and not (request.form.get("username")).isalpha():
-            flash("Fill in a valid username", "warning")
->>>>>>> a43ad60084eaa89adb13946a3bfe276c6a52bbce
+
+        if not (request.form.get("username")).isdigit() or not (request.form.get("username")).isalpha():
+            flash("Fill in a username with a letter or number!", "warning")
+
             return render_template("register.html")
 
         # Return error message if username is already taken
@@ -228,9 +225,8 @@ def profile():
 
         # Log out button
         logout = request.form.get("log_out")
-        print(logout)
+
         if logout is not None:
-            print("test")
             session.clear()
             flash("You are now logged out.", "success")
             return redirect("/")
