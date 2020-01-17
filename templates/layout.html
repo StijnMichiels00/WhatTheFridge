@@ -60,11 +60,18 @@
             </div>
         </nav>
 
-        {% if get_flashed_messages() %}
-            <header>
-                <div class="alert alert-danger text-center"><a class="close" data-dismiss="alert">×</a><span> {{ get_flashed_messages() | join(" ") }} </span></div>
-            </header>
-        {% endif %}
+
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+                <header>
+
+    {% for category, message in messages %}
+                <div class="alert alert-{{category}} text-center"><a class="close" data-dismiss="alert">×</a><span><strong>{{ category.capitalize()  }}: </strong> {{ message }} </span></div>
+    {% endfor %}
+    </header>
+  {% endif %}
+{% endwith %}
 
         <main class="container p-5">
             <section>
