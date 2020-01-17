@@ -179,6 +179,7 @@ def support():
 def results():
     ingredients=request.form.get("itemlist")
     recipes_info = lookup(ingredients)
+    # Hieronder zit nog een error!!!
     return render_template("results.html", recipes=recipes_info[0], ingredients=recipes_info[1], recipe_count=len(recipes_info[0]))
 
 
