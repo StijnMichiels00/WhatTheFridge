@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Favorites
+{% endblock %}
+{% block class %}favorite{% endblock %}
+{% block main %}
+    <div class="jumbotron">
+        <h1>
+            <strong>Favorites</strong>
+        </h1>
+    <table class="table table-striped" style="widt:100%">
+      <tr>
+        <th>Recipe</th>
+      </tr>
+      {% for number in select %}
+      <tr>
+        <td>{{ number }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+
+{% endblock %}
