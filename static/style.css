@@ -126,3 +126,15 @@
   background-size: cover;
   -o-background-size: cover;
 }
+
+.alert-message {
+  color: #31708f;
+  background-color: #d9edf7;
+  border-color: #bce8f1;
+}
+
+.alert-error {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
