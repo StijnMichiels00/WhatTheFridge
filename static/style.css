@@ -1,3 +1,4 @@
+
 .jumbotron {
     background-color:rgba(0, 0, 0, 0.6);
     color:white;
@@ -113,6 +114,13 @@
 }
 .error {
   background: url('/static/error.gif') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+}
+.favorite {
+  background: url('/static/favorite.jpg') no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   background-size: cover;
