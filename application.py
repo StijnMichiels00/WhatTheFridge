@@ -267,13 +267,18 @@ def addfavorite():
     select = []
     fav0 = db.execute("SELECT recipe FROM saved WHERE id=:d", d=session["user_id"])
     fav = []
+    title = []
+    image = []
+    titleimg = {}
     for recipe in fav0:
         fav.append(recipe["recipe"])
 
     for recipe in fav:
         print(recipe)
         recipes_info = lookup_recipe(recipe)
-        print(recipes_info)
+        title.append(recipes_info["title"])
+        image.append(recipes_info["image"])
+        titleimg[recipes_info["title"]]=recipes_info["image"]
 
     for recipe in select0:
         select.append(recipe["recipe"])
@@ -284,9 +289,9 @@ def addfavorite():
         select = []
         for recipe in select0:
             select.append(recipe["recipe"])
-        return render_template("favorite.html", select=select)
+        return render_template("favorite.html", select=select, title=title, image=image)
     else:
-        return render_template("favorite.html", select=select)
+        return render_template("favorite.html", select=select, title=title, image=image, titleimg=titleimg)
 
 @app.route("/recipe", methods=["GET"])
 # @login_required
