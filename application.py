@@ -276,7 +276,7 @@ def addfavorite():
     for recipe in fav:
         print(recipe)
         recipes_info = lookup_recipe(recipe)
-        title.append(recipes_info["title"])
+
         image.append(recipes_info["image"])
         titleimg[recipes_info["title"]]=recipes_info["image"]
 
