@@ -12,28 +12,49 @@
 <div class="jumbotron">
     <h1 class="display-4">Search recipes.</h1>
     <p class="lead">Tell us what's in your fridge to get the best recommendations.</p>
-    <form class="form" action="/results" method="POST">
+
+
+    <form action="/results" method="POST">
     <div class="form-group">
+        <textarea id="Itemlist" name="itemlist" rows="6" readonly class="form-control" placeholder="Get started by adding some items below...">{{ingredients}}</textarea>
+    </div>
 
-        <textarea id="Itemlist" name="itemlist" rows="6" readonly class="form-control" placeholder="Get started by adding some items below...">{{ingredients}}</textarea><br>
-                <div class="form-group">
-            <a href="#" class="btn btn-warning" id="removelast"><i class="fas fa-minus-circle"></i> Remove last item</a>
+    <div class="form-group">
+        <button class="btn btn-warning mr-2" id="removelast" type="button"><i class="fas fa-minus-circle"></i> Remove last item</button>
 
-            <a href="#" class="btn btn-danger" id="clear"><i class="fas fa-trash"></i> Clear items</a>
+        <button class="btn btn-danger mr-2" id="clear" type="button"><i class="fas fa-trash"></i> Clear items</button>
+    </div>
 
-            </div>
-        </div>
-        <div class="form-inline form-group">
-            <input type="text" class="form-control bs-autocomplete-menu"  id="ingredient_input" placeholder="Start typing to get suggestions..." autocomplete="off" style="width:100%"><br><br>
-            <a href="#" class="btn btn-primary" id="add"><i class="fas fa-plus"></i> Add item</a>
-        </div>
-<hr>
-
-            <br>
+    <div class="form-row">
+        <div class="col-10">
             <div class="form-group">
-            <button class="btn btn-success" type="submit" id="search"><i class="fas fa-search"></i> Search</button>
+                <input type="text" class="form-control bs-autocomplete-menu"  id="ingredient_input" placeholder="Start typing to get suggestions..." autocomplete="off">
+                </div>
             </div>
-            </form>
+            <div class="col-2">
+                <div class="form-group">
+                    <button class="btn btn-primary" id="add" type="button"><i class="fas fa-plus"></i> Add item</a>
+                </div>
+            </div>
+    </div>
+
+    <hr>
+        <div class="form-row">
+                <div class="col-4">
+    <div class="form-group">
+        <select name="ranking" class="custom-select">
+  <option value="None" selected disabled>Sorting results </option>
+  <option value="1">Most use of my ingredients (default)</option>
+  <option value="2">Least missing ingredients</option>
+</select>
+
+    </div></div>
+                <div class="col">
+    <div class="form-group">
+        <button class="btn btn-success" type="submit" id="search"><i class="fas fa-search"></i> Search</button>
+    </div></div>
+
+    </form>
 
     <script src="/static/ingredients.js" type="text/javascript"></script>
     <script>
@@ -51,9 +72,16 @@
     </script>
 
     <script>
+        console.log('ready');
+        var $edit = $("#Itemlist");
+        var curValue = $edit.val();
+        if (curValue != '') {
+        var item_count = document.querySelector('textarea').value.split("\n").length;
 
+          }
+        else {
         var item_count = 0;
-
+        }
         // Create a new list item when clicking on the "Add" button
         $('#add').on('click', function (e) {
           var inputValue = document.getElementById("ingredient_input").value;
