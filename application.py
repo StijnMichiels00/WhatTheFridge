@@ -96,13 +96,9 @@ def password():
     if request.method == "POST":
         password = request.form.get("password")
 
-<<<<<<< HEAD
-        # Haalt de huidige hash op
-        code0 = db.execute("SELECT hash FROM users WHERE user_id=:q", q=session["user_id"])
-=======
+
         # Retrieve current hash
         code0 = db.execute("SELECT hash FROM users WHERE id=:q", q=session["user_id"])
->>>>>>> f137a34c90a239c36388ba68bd6bcc1c98fffdaf
         for cd in code0:
             code = cd["hash"]
 
@@ -178,12 +174,8 @@ def support():
         # no personalised support page when logged out
         return render_template("support.html")
     else:
-<<<<<<< HEAD
-        username = db.execute("SELECT username FROM users WHERE user_id=:id", id=session["user_id"])[0]["username"]
-=======
         # get personalised support page when user is logged in
         username = db.execute("SELECT username FROM users WHERE id=:id", id=session["user_id"])[0]["username"]
->>>>>>> f137a34c90a239c36388ba68bd6bcc1c98fffdaf
         return render_template("support.html", username=username)
 
 
