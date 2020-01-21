@@ -59,4 +59,4 @@ Zie prototype op Invision voor schetsen: [open](https://whatthefridge.invisionap
 - JQuery (+ JS) - [Docs](https://api.jquery.com/)
 
 ## ERD
-![ERD](https://github.com/StijnMichiels00/WhatTheFridge/blob/master/ERD-WhatTheFridge1.png)
+![ERD](https://github.com/StijnMichiels00/WhatTheFridge/blob/master/ERD-WhatTheFridge2.png)
