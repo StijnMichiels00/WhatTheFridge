@@ -5,8 +5,8 @@
 {% endblock %}
 
 {% block main %}
-<h1 align="left">Recipes: {{ recipe_count }} results</h1>
-<p class="lead">Searching recipes with: <strong>{{ ingredients }}</strong></p>
+<h1 align="left">Recipes: <i>{{ recipe_count }} results</i></h1>
+<p class="lead">Searching recipes with: <strong>{{ ingredients.capitalize().replace(",",", ") }}</strong></p>
 <a href="/search?ingredients={{ ingredients }}"><button class="btn btn-info">Edit ingredients</button></a><br>
 <dir></dir>
 
@@ -15,8 +15,8 @@
       <tr>
         <td style="width:200px"><a href="/recipe?id={{ recipe.id }}"><img src={{recipe.image}} alt="{{ recipe.title }}" class="img-thumbnail"></a> </td>
         <td><a href="/recipe?id={{ recipe.id }}">{{ recipe.title }}</a><br><strong>Ingredients you have:</strong> {% for ingredient in recipe.usedIngredients %} {{ingredient.name.capitalize() }}{{ "," if not loop.last }} {% endfor %}
-        <br><strong>Missing ingredients:</strong> {% for ingredient in recipe.missedIngredients %} {{ ingredient.name.capitalize() }}{{ "," if not loop.last }}{% endfor %}<br>
-        <strong>Ingredients we didn't use:</strong> {% for ingredient in recipe.unusedIngredients %} {{ ingredient.name.capitalize() }}{{ "," if not loop.last }} {% endfor %}</td>
+        {% if recipe.missedIngredients %}<br><strong>Missing ingredients:</strong> {% for ingredient in recipe.missedIngredients %} {{ ingredient.name.capitalize() }}{{ "," if not loop.last }}{% endfor %}{% endif %}<br>
+        {% if recipe.unusedIngredients %}<strong>Ingredients that we didn't use:</strong> {% for ingredient in recipe.unusedIngredients %} {{ ingredient.name.capitalize() }}{{ "," if not loop.last }} {% endfor %}{% endif %}</td>
 
       </tr>
       </table>
