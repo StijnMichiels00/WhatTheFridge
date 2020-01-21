@@ -51,6 +51,7 @@ Zie prototype op Invision voor schetsen: [open](https://whatthefridge.invisionap
 - login_required - herleid gebruiker naar login pagina als authenticatie vereist is
 - server_error - verzorgt error pagina bij fout
 - lookup - doet een aanvraag bij de FoodAPI
+- lookup_recipe(id) - zoekt in de FoodAPI een recept op basis van een ID.
 
 ## Plugins en frameworks
 - Bootstrap - [Docs](https://getbootstrap.com/docs/4.4/getting-started/introduction/)
