@@ -35,7 +35,7 @@ db = SQL("sqlite:///wtf.db")
 
 @app.route("/")
 def home():
-    # Return splashpage
+    # Return splash page
     return render_template("index.html")
 
 
@@ -44,22 +44,22 @@ def register():
     if request.method == "POST":
         # Must provide username
         if not request.form.get("username"):
-            flash("Your username can't be empty.", "warning")
+            flash("Your username can't be empty.", "error")
             return render_template("register.html")
 
         # Must provide password
         elif not request.form.get("password"):
-            flash("Your password can't be empty.", "warning")
+            flash("Your password can't be empty.", "error")
             return render_template("register.html")
 
         # Must provide confirmation
         elif not request.form.get("confirmation"):
-            flash("Your password confirmation can't be empty.", "warning")
+            flash("Your password confirmation can't be empty.", "error")
             return render_template("register.html")
 
         # Password and confirmation have to match to successfully register
         elif request.form.get("password") != request.form.get("confirmation"):
-            flash("Your password and confimation don't match.", "warning")
+            flash("Your password and confimation don't match.", "error")
             return render_template("register.html")
 
         # Checks databse if username is already taken
@@ -68,12 +68,12 @@ def register():
 
         # Checks if username is a letter or a number for safety reasons
         if not (request.form.get("username")).isdigit() and not (request.form.get("username")).isalpha():
-            flash("Fill in a username with a letter or number!", "warning")
+            flash("Fill in a username with a letter or number!", "error")
             return render_template("register.html")
 
         # Return error message if username is already taken
         if len(user_taken) == 1:
-            flash("This username has been taken. Choose something else...", "warning")
+            flash("This username has been taken. Choose something else...", "error")
             return render_template("register.html")
 
         # Insert username and password into database
@@ -84,7 +84,7 @@ def register():
         session["user_id"] = user
 
         # Redirect to our search page
-        flash("Your account has been created", "success")
+        flash("Welcome to WhatTheFridge?!, "+ request.form.get("username") + ". You are now registered.", "success")
         return redirect("/search")
 
     else:
@@ -105,12 +105,12 @@ def password():
         npassword = request.form.get("newpassword")
         newpassword = generate_password_hash(npassword)
 
-        # Wachtwoord check
+        # Check if password is correct
         if check_password_hash(code, password) == False:
-            flash("Password incorrect", "warning")
+            flash("Your current password incorrect", "error")
             return render_template("password.html")
 
-        # Veranderen wachtwoord in database
+        # Change password
         else:
             db.execute("UPDATE users SET hash=:p WHERE id=:d", p=newpassword, d=session["user_id"])
             return render_template("index.html")
@@ -128,12 +128,12 @@ def login():
 
         # Must provide a username
         if not request.form.get("username"):
-            flash("Your username can't be empty.", "warning")
+            flash("Your username can't be empty.", "error")
             return render_template("login.html")
 
         # Must provide a password
         elif not request.form.get("password"):
-            flash("Your password can't be empty.", "warning")
+            flash("Your password can't be empty.", "error")
             return render_template("login.html")
 
         # Checks databse if username is already taken
@@ -142,7 +142,7 @@ def login():
 
         # Checks if username is in database and if password corresponds with that user
         if len(user_taken) != 1 or not check_password_hash(user_taken[0]["hash"], request.form.get("password")):
-            flash("Invalid username and/or password.", "warning")
+            flash("Invalid username and/or password.", "error")
             return render_template("login.html")
 
         # Remember which user has logged in
@@ -159,18 +159,21 @@ def login():
 @app.route("/search", methods=["GET"])
 # @login_required
 def search():
+    # make sure all ingredients in a GET-request are returned to page (for edit query button)
     if request.args.get("ingredients"):
-        ingre = request.args.get("ingredients").replace(",","\n")
-        return render_template("search.html",ingredients=ingre)
+        # format them for textbox
+        ingredients = request.args.get("ingredients").replace(",","\n")
+        return render_template("search.html",ingredients=ingredients)
     return render_template("search.html")
 
 
 @app.route("/support", methods=["GET"])
-# @login_required
 def support():
     if not session:
+        # no personalised support page when logged out
         return render_template("support.html")
     else:
+        # get personalised support page when user is logged in
         username = db.execute("SELECT username FROM users WHERE id=:id", id=session["user_id"])[0]["username"]
         return render_template("support.html", username=username)
 
@@ -179,16 +182,23 @@ def support():
 # @login_required
 def results():
     ingredients=request.form.get("itemlist")
+    ranking=request.form.get("ranking")
     if not ingredients:
         flash("Provide at least one ingredient.", "warning")
         return redirect("/search")
-    recipes_info = lookup(ingredients)
+
+    # lookup
+    recipes_info = lookup(ingredients, ranking=1)
+
+    # Error when results are empty (API limit reached (probably))
     if recipes_info == None:
         flash("Something went wrong. Get in touch with us for more information (402).", "error")
         return redirect("/search")
+    # Error when no results could be found
     if len(recipes_info[0]) == 0:
         flash("We couldn't find any results.", "error")
         return redirect("/search")
+    # return results page
     return render_template("results.html", recipes=recipes_info[0], ingredients=recipes_info[1], recipe_count=len(recipes_info[0]))
 
 
@@ -198,7 +208,7 @@ def results():
 def profile():
 
     # Retrieve username from database
-    username = [x["username"] for x in (db.execute("SELECT username FROM users WHERE id=:q", q=session["user_id"]))][0]
+    username = db.execute("SELECT username FROM users WHERE id=:id", id=session["user_id"])[0]["username"]
     check = [x["favorite"] for x in (db.execute("SELECT * FROM favorites WHERE user_id=:n", n=session["user_id"]))]
 
     # Create lists for checkboxes
@@ -297,16 +307,14 @@ def addfavorite():
 @app.route("/recipe", methods=["GET"])
 # @login_required
 def recipe():
+    # get id from get argument
     id=request.args.get("id")
+    # find recipe info with id
     recipeinfo = lookup_recipe(id)
     url = recipeinfo["sourceUrl"]
+    # change every url to https (for safety)
     url = url.replace('http://','https://')
     return render_template("recipe_iframe.html", url=url, recipeinfo=recipeinfo, id=id)
-
-
-@app.route("/help", methods=["GET"])
-def helps():
-    return print("TODO")
 
 
 def errorhandler(e):

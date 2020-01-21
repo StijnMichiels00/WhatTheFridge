@@ -31,7 +31,7 @@ def errorhandle(message, code=400):
     return render_template("error.html", code=code, message=escape(message)), code
 
 
-def lookup(ingredients):
+def lookup(ingredients,ranking):
     """
     Lookup recipes by ingredients
 
@@ -42,7 +42,7 @@ def lookup(ingredients):
 
     try:
         api_key = "a1f53621911f456d8fa26ada918aae46"
-        response = requests.get(f"https://api.spoonacular.com/recipes/findByIngredients?ingredients={(ingredients)}&apiKey={api_key}")
+        response = requests.get(f"https://api.spoonacular.com/recipes/findByIngredients?ingredients={(ingredients)}&ranking={ranking}&apiKey={api_key}")
         response.raise_for_status()
     except requests.RequestException:
         return None
