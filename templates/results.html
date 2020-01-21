@@ -5,25 +5,23 @@
 {% endblock %}
 
 {% block main %}
-<h1 align="left">Recipes</h1>
-<p class="lead">Searching with: <i>{{ ingredients }}</i></p>
+<h1 align="left">Recipes: {{ recipe_count }} results</h1>
+<p class="lead">Searching recipes with: <strong>{{ ingredients }}</strong></p>
 <a href="/search?ingredients={{ ingredients }}"><button class="btn btn-info">Edit Query</button></a><br>
-<p class="lead"><strong>Showing: {{ recipe_count }} results</strong></p>
 
+
+
+    {% for recipe in recipes %}
     <table class="table table-striped table-bordered" style="width:100%; text-align:left;">
       <tr>
-      <th width="25%">Image</th>
-      <th width="75%">Name</th>
+        <td style="width:200px"><a href="/recipe?id={{ recipe.id }}"><img src={{recipe.image}} alt="{{ recipe.title }}" class="img-thumbnail"></a> </td>
+        <td><a href="/recipe?id={{ recipe.id }}">{{ recipe.title }}</a><br><strong>Ingredients you have:</strong> {% for ingredient in recipe.usedIngredients %} {{ingredient.name.capitalize() }}{{ "," if not loop.last }} {% endfor %}
+        <br><strong>Missing ingredients:</strong> {% for ingredient in recipe.missedIngredients %} {{ ingredient.name.capitalize() }}{{ "," if not loop.last }}{% endfor %}<br>
+        <strong>Ingredients we didn't use:</strong> {% for ingredient in recipe.unusedIngredients %} {{ ingredient.name.capitalize() }}{{ "," if not loop.last }} {% endfor %}</td>
 
       </tr>
-    {% for recipe in recipes %}
-      <tr>
-        <td><a href="/recipe?id={{ recipe.id }}"><img src={{recipe.image}} alt="{{ recipe.title }}" class="img-thumbnail"></a> </td>
-        <td><a href="/recipe?id={{ recipe.id }}">{{ recipe.title }}</a></td>
-
-
-      </tr>
+      </table>
     {% endfor %}
-    </table>
+
 
 {% endblock %}
