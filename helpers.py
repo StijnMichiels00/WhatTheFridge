@@ -55,7 +55,7 @@ def lookup(ingredients,ranking):
     except (KeyError, TypeError, ValueError):
         return None
 
-def lookup_recipe(id, ranking):
+def lookup_recipe(id, ranking=1):
     """
     Lookup recipes by id
 
