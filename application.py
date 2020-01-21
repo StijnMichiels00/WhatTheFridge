@@ -96,8 +96,13 @@ def password():
     if request.method == "POST":
         password = request.form.get("password")
 
+<<<<<<< HEAD
+        # Haalt de huidige hash op
+        code0 = db.execute("SELECT hash FROM users WHERE user_id=:q", q=session["user_id"])
+=======
         # Retrieve current hash
         code0 = db.execute("SELECT hash FROM users WHERE id=:q", q=session["user_id"])
+>>>>>>> f137a34c90a239c36388ba68bd6bcc1c98fffdaf
         for cd in code0:
             code = cd["hash"]
 
@@ -112,7 +117,7 @@ def password():
 
         # Change password
         else:
-            db.execute("UPDATE users SET hash=:p WHERE id=:d", p=newpassword, d=session["user_id"])
+            db.execute("UPDATE users SET hash=:p WHERE user_id=:d", p=newpassword, d=session["user_id"])
             return render_template("index.html")
 
     else:
@@ -146,7 +151,7 @@ def login():
             return render_template("login.html")
 
         # Remember which user has logged in
-        session["user_id"] = user_taken[0]["id"]
+        session["user_id"] = user_taken[0]["user_id"]
 
         # Redirect to our search page
         flash("Welcome back, " + request.form.get("username") + "! You are now logged in.", "success")
@@ -173,8 +178,12 @@ def support():
         # no personalised support page when logged out
         return render_template("support.html")
     else:
+<<<<<<< HEAD
+        username = db.execute("SELECT username FROM users WHERE user_id=:id", id=session["user_id"])[0]["username"]
+=======
         # get personalised support page when user is logged in
         username = db.execute("SELECT username FROM users WHERE id=:id", id=session["user_id"])[0]["username"]
+>>>>>>> f137a34c90a239c36388ba68bd6bcc1c98fffdaf
         return render_template("support.html", username=username)
 
 
@@ -209,7 +218,7 @@ def profile():
 
     # Retrieve username from database
     username = db.execute("SELECT username FROM users WHERE id=:id", id=session["user_id"])[0]["username"]
-    check = [x["favorite"] for x in (db.execute("SELECT * FROM favorites WHERE user_id=:n", n=session["user_id"]))]
+    check = [x["exclusions"] for x in (db.execute("SELECT * FROM users WHERE user_id=:n", n=session["user_id"]))]
 
     # Create lists for checkboxes
     box_meat = []
@@ -245,8 +254,8 @@ def profile():
             return redirect("/")
 
 
-        recipes = db.execute("SELECT * FROM saved WHERE id=:n", n=session["user_id"])
-        print(recipes)
+        recipes = db.execute("SELECT * FROM saved WHERE user_id=:n", n=session["user_id"])
+
         # If meat selected, add meat to preferences
         if meat == "Meat":
             preferences.append(meat)
@@ -260,10 +269,10 @@ def profile():
             preferences.append("Meat'Fish")
 
         if len(check) == 0:
-            db.execute("INSERT INTO favorites (favorite, user_id) VALUES (:favorite, :user_id)", favorite=preferences, user_id=session["user_id"])
+            db.execute("INSERT INTO users (exclusions, user_id) VALUES (:favorite, :user_id)", favorite=preferences, user_id=session["user_id"])
 
         else:
-            db.execute("UPDATE favorites SET favorite=:p WHERE user_id=:d", p=preferences, d=session["user_id"])
+            db.execute("UPDATE users SET exclusions=:p WHERE user_id=:d", p=preferences, d=session["user_id"])
 
         return render_template("index.html", preferences=preferences)
 
@@ -274,9 +283,9 @@ def profile():
 @app.route("/addfavorite", methods=["GET"])
 # @login_required
 def addfavorite():
-    select0 = db.execute("SELECT recipe FROM saved WHERE id=:d", d=session["user_id"])
+    select0 = db.execute("SELECT recipe FROM saved WHERE user_id=:d", d=session["user_id"])
     select = []
-    fav0 = db.execute("SELECT recipe FROM saved WHERE id=:d", d=session["user_id"])
+    fav0 = db.execute("SELECT recipe FROM saved WHERE user_id=:d", d=session["user_id"])
     fav = []
     title = []
     image = []
@@ -295,7 +304,7 @@ def addfavorite():
         select.append(recipe["recipe"])
     saved = request.args.get("id")
     if saved is not None:
-        db.execute("INSERT INTO saved (recipe, id) VALUES (:recipe, :d)", recipe=saved, d=session["user_id"])
+        db.execute("INSERT INTO saved (recipe, user_id) VALUES (:recipe, :d)", recipe=saved, d=session["user_id"])
         select0 = db.execute("SELECT recipe FROM saved WHERE id=:d", d=session["user_id"])
         select = []
         for recipe in select0:
