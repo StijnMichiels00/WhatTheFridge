@@ -90,34 +90,6 @@ def register():
     else:
         return render_template("register.html")
 
-@app.route("/password", methods=["GET", "POST"])
-@login_required
-def password():
-    if request.method == "POST":
-        password = request.form.get("password")
-
-
-        # Retrieve current hash
-        code0 = db.execute("SELECT hash FROM users WHERE id=:q", q=session["user_id"])
-        for cd in code0:
-            code = cd["hash"]
-
-        # Create new hash
-        npassword = request.form.get("newpassword")
-        newpassword = generate_password_hash(npassword)
-
-        # Check if password is correct
-        if check_password_hash(code, password) == False:
-            flash("Your current password incorrect", "error")
-            return render_template("password.html")
-
-        # Change password
-        else:
-            db.execute("UPDATE users SET hash=:p WHERE user_id=:d", p=newpassword, d=session["user_id"])
-            return render_template("index.html")
-
-    else:
-        return render_template("password.html")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -158,7 +130,7 @@ def login():
 
 
 @app.route("/search", methods=["GET"])
-# @login_required
+@login_required
 def search():
     # Make sure all ingredients in a GET-request are returned to page (for edit query button)
     if request.args.get("ingredients"):
@@ -180,7 +152,7 @@ def support():
 
 
 @app.route("/results", methods=["POST"])
-# @login_required
+@login_required
 def results():
     ingredients=request.form.get("itemlist")
     ranking=request.form.get("ranking")
@@ -213,7 +185,7 @@ def results():
 
 
 @app.route("/profile", methods=["GET", "POST"])
-# @login_required
+@login_required
 def profile():
 
     # Retrieve username from database
@@ -281,7 +253,7 @@ def profile():
 
 
 @app.route("/addfavorite", methods=["GET"])
-# @login_required
+@login_required
 def addfavorite():
 
     id = request.args.get("id")
@@ -295,6 +267,7 @@ def addfavorite():
         errorhandle("NoID",400)
 
 @app.route("/favorites", methods=["GET", "POST"])
+@login_required
 def favorites():
 
     if request.method == "POST":
@@ -309,7 +282,7 @@ def favorites():
         return render_template("favorite.html", info_recipes=info_recipes)
 
 @app.route("/recipe", methods=["GET"])
-# @login_required
+@login_required
 def recipe():
     # Get ID from get argument
     id=request.args.get("id")
@@ -325,6 +298,36 @@ def recipe():
     # change every url to https (for safety/iFrame rules)
     url = url.replace('http://','https://')
     return render_template("recipe_iframe.html", url=url, recipeinfo=recipeinfo, id=id)
+
+
+@app.route("/password", methods=["GET", "POST"])
+@login_required
+def password():
+    if request.method == "POST":
+        password = request.form.get("password")
+
+
+        # Retrieve current hash
+        code0 = db.execute("SELECT hash FROM users WHERE id=:q", q=session["user_id"])
+        for cd in code0:
+            code = cd["hash"]
+
+        # Create new hash
+        npassword = request.form.get("newpassword")
+        newpassword = generate_password_hash(npassword)
+
+        # Check if password is correct
+        if check_password_hash(code, password) == False:
+            flash("Your current password incorrect", "error")
+            return render_template("password.html")
+
+        # Change password
+        else:
+            db.execute("UPDATE users SET hash=:p WHERE user_id=:d", p=newpassword, d=session["user_id"])
+            return render_template("index.html")
+
+    else:
+        return render_template("password.html")
 
 
 def errorhandler(e):

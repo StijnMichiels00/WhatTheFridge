@@ -4,6 +4,7 @@ import os
 from flask import redirect, render_template, request, session
 from functools import wraps
 
+api_key="692bda0d3e3843ea8694ef8df02201b3"
 def login_required(f):
     """
     Decorate routes to require login.
@@ -41,7 +42,6 @@ def lookup(ingredients,ranking):
     ingredients = ','.join(ingredients_string)
 
     try:
-        api_key = "a1f53621911f456d8fa26ada918aae46"
         response = requests.get(f"https://api.spoonacular.com/recipes/findByIngredients?ingredients={(ingredients)}&ranking={ranking}&number=2&apiKey={api_key}")
         response.raise_for_status()
     except requests.RequestException:
@@ -62,7 +62,6 @@ def lookup_recipe(id, ranking=1):
     https://spoonacular.com/food-api/docs#Search-Recipes-by-Ingredients
     """
     try:
-        api_key = "a1f53621911f456d8fa26ada918aae46"
         response = requests.get(f"https://api.spoonacular.com/recipes/{id}/information?apiKey={api_key}")
         response.raise_for_status()
     except requests.RequestException:
@@ -86,7 +85,6 @@ def lookup_bulk(ids):
     ids_string = ",".join(ids_list)
 
     try:
-        api_key = "84400361d3d14fd7b636a369e980681b"
         response = requests.get(f"https://api.spoonacular.com/recipes/informationBulk?ids={ids_string}&apiKey={api_key}")
         response.raise_for_status()
     except requests.RequestException:

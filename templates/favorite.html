@@ -17,7 +17,7 @@
 
       {% for recipe in info_recipes %}
       <tr>
-        <td style="width:200px"><a href="/recipe?id={{ recipes[i].id }}"><img src={{recipes[i].image}} alt="{{ recipes[i].title }}" class="img-thumbnail"></a> </td>
+        <td style="width:200px"><a href="/recipe?id={{ recipe.id }}"><img src={{recipe.image}} alt="{{ recipe.title }}" class="img-thumbnail"></a> </td>
         <td><a href="/recipe?id={{recipe["id"]}}">{{ recipe["title"] }}</a>
       </tr>
       {% endfor %}
