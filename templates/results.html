@@ -10,14 +10,14 @@
 <a href="/search?ingredients={{ ingredients }}"><button class="btn btn-info">Edit ingredients</button></a><br>
 <dir></dir>
 
-    {% for recipe in recipes %}
+    {% for i in range(recipe_count) %}
     <table class="table table-striped table-bordered">
       <tr>
-        <td style="width:200px"><a href="/recipe?id={{ recipe.id }}"><img src={{recipe.image}} alt="{{ recipe.title }}" class="img-thumbnail"></a> </td>
-        <td><a href="/recipe?id={{ recipe.id }}">{{ recipe.title }}</a><br><strong>Ingredients you have:</strong> {% for ingredient in recipe.usedIngredients %} {{ingredient.name.capitalize() }}{{ "," if not loop.last }} {% endfor %}
-        {% if recipe.missedIngredients %}<br><strong>Missing ingredients:</strong> {% for ingredient in recipe.missedIngredients %} {{ ingredient.name.capitalize() }}{{ "," if not loop.last }}{% endfor %}{% endif %}<br>
-        {% if recipe.unusedIngredients %}<strong>Ingredients that we didn't use:</strong> {% for ingredient in recipe.unusedIngredients %} {{ ingredient.name.capitalize() }}{{ "," if not loop.last }} {% endfor %}{% endif %}</td>
-
+        <td style="width:200px"><a href="/recipe?id={{ recipes[i].id }}"><img src={{recipes[i].image}} alt="{{ recipes[i].title }}" class="img-thumbnail"></a> </td>
+        <td><a href="/recipe?id={{ recipes[i].id }}">{{ recipes[i].title }}</a><br><strong>Ingredients you have:</strong> {% for ingredient in recipes[i].usedIngredients %} {{ingredient.name.capitalize() }}{{ "," if not loop.last }} {% endfor %}
+        {% if recipes[i].missedIngredients %}<br><strong>Missing ingredients:</strong> {% for ingredient in recipes[i].missedIngredients %} {{ ingredient.name.capitalize() }}{{ "," if not loop.last }}{% endfor %}{% endif %}<br>
+        {% if recipes[i].unusedIngredients %}<strong>Ingredients that we didn't use:</strong> {% for ingredient in recipes[i].unusedIngredients %} {{ ingredient.name.capitalize() }}{{ "," if not loop.last }} {% endfor %}{% endif %}</td>
+        <td><br><strong>Serving Time:</strong>{{ extra_info[i].readyInMinutes }}</br></td>
       </tr>
       </table>
     {% endfor %}
