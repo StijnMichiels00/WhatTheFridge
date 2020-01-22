@@ -160,9 +160,9 @@ def login():
 @app.route("/search", methods=["GET"])
 # @login_required
 def search():
-    # make sure all ingredients in a GET-request are returned to page (for edit query button)
+    # Make sure all ingredients in a GET-request are returned to page (for edit query button)
     if request.args.get("ingredients"):
-        # format them for textbox
+        # Format them for textbox
         ingredients = request.args.get("ingredients").replace(",","\n")
         return render_template("search.html",ingredients=ingredients)
     return render_template("search.html")
@@ -171,10 +171,10 @@ def search():
 @app.route("/support", methods=["GET"])
 def support():
     if not session:
-        # no personalised support page when logged out
+        # No personalised support page when logged out
         return render_template("support.html")
     else:
-        # get personalised support page when user is logged in
+        # Get personalised support page when user is logged in
         username = db.execute("SELECT username FROM users WHERE id=:id", id=session["user_id"])[0]["username"]
         return render_template("support.html", username=username)
 
@@ -322,16 +322,18 @@ def addfavorite():
 @app.route("/recipe", methods=["GET"])
 # @login_required
 def recipe():
-    # get id from get argument
+    # Get ID from get argument
     id=request.args.get("id")
 
-    # find recipe info with id
+    # Find recipe info with ID
     recipeinfo = lookup_recipe(id)
+
+    # The recipe isn't found with the ID
     if recipeinfo is None:
         return errorhandle("IDErrorUnavailable", 400)
     url = recipeinfo["sourceUrl"]
 
-    # change every url to https (for safety)
+    # change every url to https (for safety/iFrame rules)
     url = url.replace('http://','https://')
     return render_template("recipe_iframe.html", url=url, recipeinfo=recipeinfo, id=id)
 
