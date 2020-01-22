@@ -283,41 +283,30 @@ def profile():
 @app.route("/addfavorite", methods=["GET"])
 # @login_required
 def addfavorite():
-    select0 = db.execute("SELECT recipe FROM saved WHERE user_id=:d", d=session["user_id"])
-    select = []
-    fav0 = db.execute("SELECT recipe FROM saved WHERE user_id=:d", d=session["user_id"])
-    fav = []
-    title = []
-    image = []
-    recipes_info = ""
-    titleimg = {}
-    recipes = []
-    for recipe in fav0:
-        fav.append(recipe["recipe"])
 
-    for recipe in fav:
-        recipes.append(recipe)
+    id = request.args.get("id")
 
+    if id:
+        db.execute("INSERT INTO saved (recipe, user_id) VALUES (:recipe, :user_id)", recipe=id, user_id=session["user_id"])
+        flash("Saved!")
+        return redirect(request.referrer)
 
-    recipes_info = lookup_recipe(recipe)
-
-        # image.append(recipes_info["image"])
-        # titleimg[recipes_info["title"]]=recipes_info["image"]
-    for recipe in recipes_info:
-        print(recipe["id"])
-    for recipe in select0:
-        select.append(recipe["recipe"])
-    saved = request.args.get("id")
-
-    if saved is not None:
-        db.execute("INSERT INTO saved (recipe, user_id) VALUES (:recipe, :d)", recipe=saved, d=session["user_id"])
-        select0 = db.execute("SELECT recipe FROM saved WHERE user_id=:d", d=session["user_id"])
-        select = []
-        for recipe in select0:
-            select.append(recipe["recipe"])
-        return render_template("favorite.html", select=select, lookup_recipe=recipes_info)
     else:
-        return render_template("favorite.html", select=select, lookup_recipe=recipes_info)
+        errorhandle("NoID",400)
+
+@app.route("/favorites", methods=["GET", "POST"])
+def favorites():
+
+    if request.method == "POST":
+        pass
+
+    else:
+        saved_recipes = db.execute("SELECT recipe FROM saved WHERE user_id=:user_id", user_id=session["user_id"])
+        ids = []
+        for recipe in saved_recipes:
+            ids.append(recipe['recipe'])
+        info_recipes = lookup_bulk(ids)
+        return render_template("favorite.html", info_recipes=info_recipes)
 
 @app.route("/recipe", methods=["GET"])
 # @login_required
