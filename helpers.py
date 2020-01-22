@@ -42,7 +42,7 @@ def lookup(ingredients,ranking):
 
     try:
         api_key = "a1f53621911f456d8fa26ada918aae46"
-        response = requests.get(f"https://api.spoonacular.com/recipes/findByIngredients?ingredients={(ingredients)}&ranking={ranking}&apiKey={api_key}")
+        response = requests.get(f"https://api.spoonacular.com/recipes/findByIngredients?ingredients={(ingredients)}&ranking={ranking}&number=2&apiKey={api_key}")
         response.raise_for_status()
     except requests.RequestException:
         return None
@@ -82,9 +82,12 @@ def lookup_bulk(ids):
 
     https://spoonacular.com/food-api/docs#Get-Recipe-Information-Bulk
     """
+    ids_list = [str(i) for i in ids]
+    ids_string = ",".join(ids_list)
+
     try:
         api_key = "a1f53621911f456d8fa26ada918aae46"
-        response = requests.get(f"https://api.spoonacular.com/recipes/informationBulk?ids={ids}?apiKey={api_key}")
+        response = requests.get(f"https://api.spoonacular.com/recipes/informationBulk?ids={ids_string}&apiKey={api_key}")
         response.raise_for_status()
     except requests.RequestException:
         return None

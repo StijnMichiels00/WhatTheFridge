@@ -8,7 +8,7 @@ from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import login_required, errorhandle, lookup, lookup_recipe
+from helpers import login_required, errorhandle, lookup, lookup_recipe, lookup_bulk
 
 # Configure application
 app = Flask(__name__)
@@ -191,6 +191,12 @@ def results():
     # lookup
     recipes_info = lookup(ingredients, ranking=1)
 
+    ids = []
+    for recipe in recipes_info[0]:
+        ids.append(recipe['id'])
+
+    recipes_extra_info = lookup_bulk(ids)
+
     # Error when results are empty (API limit reached (probably))
     if recipes_info == None:
         flash("Something went wrong. Get in touch with us for more information (402).", "error")
@@ -200,7 +206,7 @@ def results():
         flash("We couldn't find any results.", "error")
         return redirect("/search")
     # return results page
-    return render_template("results.html", recipes=recipes_info[0], ingredients=recipes_info[1], recipe_count=len(recipes_info[0]))
+    return render_template("results.html", recipes=recipes_info[0], ingredients=recipes_info[1], recipe_count=len(recipes_info[0]), extra_info=recipes_extra_info)
 
 
 
