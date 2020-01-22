@@ -175,7 +175,7 @@ def support():
         return render_template("support.html")
     else:
         # Get personalised support page when user is logged in
-        username = db.execute("SELECT username FROM users WHERE id=:id", id=session["user_id"])[0]["username"]
+        username = db.execute("SELECT username FROM users WHERE user_id=:id", id=session["user_id"])[0]["username"]
         return render_template("support.html", username=username)
 
 
