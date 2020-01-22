@@ -9,11 +9,11 @@
 <p class="lead">Searching recipes with: <strong>{{ ingredients.capitalize().replace(",",", ") }}</strong></p>
 <a href="/search?ingredients={{ ingredients }}"><button class="btn btn-info">Edit ingredients</button></a><br>
 
-<dir></dir>
-<script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+<script src="/static/sorttable.js"></script>
 
     <table class="table table-borderless sortable">
       <tr>
+        <thead>
         <th>
         </th>
         <th>
@@ -25,6 +25,7 @@
         <th>
           <a href="#"><strong>Price Per Serving</strong></a>
         </th>
+        </thead>
       </tr>
     {% for i in range(recipe_count) %}
 

@@ -287,6 +287,8 @@ def recipe():
     # Get ID from get argument
     id=request.args.get("id")
 
+
+
     # Find recipe info with ID
     recipeinfo = lookup_recipe(id)
 
@@ -297,6 +299,13 @@ def recipe():
 
     # change every url to https (for safety/iFrame rules)
     url = url.replace('http://','https://')
+
+    # Fetch recipes to check the saved ids
+    saved_recipes = db.execute("SELECT * FROM saved WHERE user_id=:user_id AND recipe=:recipe", user_id=session["user_id"], recipe=id)
+    # If recipe already is in favourites (flash message to modify save button)
+    if len(saved_recipes) > 0:
+        flash("Internal: already saved")
+
     return render_template("recipe_iframe.html", url=url, recipeinfo=recipeinfo, id=id)
 
 
