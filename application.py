@@ -188,9 +188,11 @@ def results():
         flash("Provide at least one ingredient.", "warning")
         return redirect("/search")
 
-    # lookup
+    # Lookup
     recipes_info = lookup(ingredients, ranking=1)
 
+    # Lookup extra info
+    # Create string of recipes ids
     ids = []
     for recipe in recipes_info[0]:
         ids.append(recipe['id'])

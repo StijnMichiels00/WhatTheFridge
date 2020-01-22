@@ -8,6 +8,7 @@
 <h1 align="left">Recipes: <i>{{ recipe_count }} results</i></h1>
 <p class="lead">Searching recipes with: <strong>{{ ingredients.capitalize().replace(",",", ") }}</strong></p>
 <a href="/search?ingredients={{ ingredients }}"><button class="btn btn-info">Edit ingredients</button></a><br>
+
 <dir></dir>
 
     {% for i in range(recipe_count) %}
@@ -17,7 +18,8 @@
         <td><a href="/recipe?id={{ recipes[i].id }}">{{ recipes[i].title }}</a><br><strong>Ingredients you have:</strong> {% for ingredient in recipes[i].usedIngredients %} {{ingredient.name.capitalize() }}{{ "," if not loop.last }} {% endfor %}
         {% if recipes[i].missedIngredients %}<br><strong>Missing ingredients:</strong> {% for ingredient in recipes[i].missedIngredients %} {{ ingredient.name.capitalize() }}{{ "," if not loop.last }}{% endfor %}{% endif %}<br>
         {% if recipes[i].unusedIngredients %}<strong>Ingredients that we didn't use:</strong> {% for ingredient in recipes[i].unusedIngredients %} {{ ingredient.name.capitalize() }}{{ "," if not loop.last }} {% endfor %}{% endif %}</td>
-        <td><br><strong>Serving Time:</strong>{{ extra_info[i].readyInMinutes }}</br></td>
+        <td style="width:250px"><br><strong>Serving Time: </strong>{{ extra_info[i].readyInMinutes }}</br>
+        <br><strong>Price per serving: </strong>{{extra_info[i].pricePerServing }}</br></td>
       </tr>
       </table>
     {% endfor %}
