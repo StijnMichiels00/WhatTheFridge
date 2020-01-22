@@ -296,12 +296,13 @@ def addfavorite():
     for recipe in fav:
         recipes.append(recipe)
 
-    # print(recipes)
-        recipes_info = lookup_recipe(recipe)
-    # print(recipes_info)
+
+    recipes_info = lookup_recipe(recipe)
+
         # image.append(recipes_info["image"])
         # titleimg[recipes_info["title"]]=recipes_info["image"]
-
+    for recipe in recipes_info:
+        print(recipe["id"])
     for recipe in select0:
         select.append(recipe["recipe"])
     saved = request.args.get("id")
