@@ -9,15 +9,21 @@
         <h1>
             <strong>Favorites</strong>
         </h1>
-    <table class="table table-striped" style="widt:100%">
+    {% if info_recipes %}
+    <table class="table table-striped" style="width:100%">
       <tr>
         <th style="color:seagreen">Recipe</th>
       </tr>
+
       {% for recipe in info_recipes %}
       <tr>
-        <td><a href="/recipe?id={{recipe["id"]}}" style="text-decoration:None; color:white"><img style="width: 120px" src={{ recipe["image"] }} class="img-thumbnail">  {{ recipe["title"] }}</td>
+        <td style="width:200px"><a href="/recipe?id={{ recipes[i].id }}"><img src={{recipes[i].image}} alt="{{ recipes[i].title }}" class="img-thumbnail"></a> </td>
+        <td><a href="/recipe?id={{recipe["id"]}}">{{ recipe["title"] }}</a>
       </tr>
       {% endfor %}
-    </table>
 
+    </table>
+      {% else %}
+      <p>You don't have any favorites saved.</p>
+      {% endif %}
 {% endblock %}

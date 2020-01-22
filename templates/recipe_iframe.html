@@ -72,7 +72,16 @@
                 {% endif %}
             </div>
         </nav>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+                <header>
 
+    {% for category, message in messages %}
+                <div class="alert alert-{{category}} text-center"><a class="close" data-dismiss="alert">×</a><span><strong>{{ category.capitalize()  }}: </strong> {{ message }} </span></div>
+    {% endfor %}
+    </header>
+  {% endif %}
+{% endwith %}
 <iframe src="{{url}}" style="position:absolute; height:100%; width:100%"></iframe>
 
     </body>
