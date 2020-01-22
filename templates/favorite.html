@@ -13,9 +13,9 @@
       <tr>
         <th style="color:seagreen">Recipe</th>
       </tr>
-      {% for name, image in titleimg.items() %}
+      {% for recipes in select %}
       <tr>
-        <td><img style="width: 120px" src={{ image }} class="img-thumbnail">  {{ name }}</td>
+        <td><a href="/recipe?id={{recipes}}" style="text-decoration:None; color:white"><img style="width: 120px" src={{ lookup_recipe["image"] }} class="img-thumbnail">  {{ lookup_recipe["title"] }}</td>
       </tr>
       {% endfor %}
     </table>

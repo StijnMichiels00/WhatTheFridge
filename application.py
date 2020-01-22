@@ -287,29 +287,34 @@ def addfavorite():
     fav = []
     title = []
     image = []
+    recipes_info = ""
     titleimg = {}
+    recipes = []
     for recipe in fav0:
         fav.append(recipe["recipe"])
 
     for recipe in fav:
-        print(recipe)
-        recipes_info = lookup_recipe(recipe)
+        recipes.append(recipe)
 
-        image.append(recipes_info["image"])
-        titleimg[recipes_info["title"]]=recipes_info["image"]
+    print(recipes)
+    recipes_info = lookup_recipe(recipes)
+    print(recipes_info)
+        # image.append(recipes_info["image"])
+        # titleimg[recipes_info["title"]]=recipes_info["image"]
 
     for recipe in select0:
         select.append(recipe["recipe"])
     saved = request.args.get("id")
+
     if saved is not None:
         db.execute("INSERT INTO saved (recipe, user_id) VALUES (:recipe, :d)", recipe=saved, d=session["user_id"])
-        select0 = db.execute("SELECT recipe FROM saved WHERE id=:d", d=session["user_id"])
+        select0 = db.execute("SELECT recipe FROM saved WHERE user_id=:d", d=session["user_id"])
         select = []
         for recipe in select0:
             select.append(recipe["recipe"])
-        return render_template("favorite.html", select=select, title=title, image=image)
+        return render_template("favorite.html", select=select, lookup_recipe=recipes_info)
     else:
-        return render_template("favorite.html", select=select, title=title, image=image, titleimg=titleimg)
+        return render_template("favorite.html", select=select, lookup_recipe=recipes_info)
 
 @app.route("/recipe", methods=["GET"])
 # @login_required
