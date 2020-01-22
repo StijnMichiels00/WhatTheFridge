@@ -310,11 +310,13 @@ def addfavorite():
 def recipe():
     # get id from get argument
     id=request.args.get("id")
+
     # find recipe info with id
     recipeinfo = lookup_recipe(id)
     if recipeinfo is None:
         return errorhandle("IDErrorUnavailable", 400)
     url = recipeinfo["sourceUrl"]
+
     # change every url to https (for safety)
     url = url.replace('http://','https://')
     return render_template("recipe_iframe.html", url=url, recipeinfo=recipeinfo, id=id)

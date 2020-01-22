@@ -76,3 +76,24 @@ def lookup_recipe(id, ranking=1):
     except (KeyError, TypeError, ValueError):
         return None
 
+def lookup_bulk(ids):
+    """
+    Bulk lookup recipes by id
+
+    https://spoonacular.com/food-api/docs#Get-Recipe-Information-Bulk
+    """
+    try:
+        api_key = "a1f53621911f456d8fa26ada918aae46"
+        response = requests.get(f"https://api.spoonacular.com/recipes/informationBulk?ids={ids}?apiKey={api_key}")
+        response.raise_for_status()
+    except requests.RequestException:
+        return None
+
+    # Parse response
+    try:
+        recipesinfo = response.json()
+        return recipesinfo
+
+    except (KeyError, TypeError, ValueError):
+        return None
+
