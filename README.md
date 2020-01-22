@@ -5,11 +5,11 @@
 Met behulp van onze applicatie kan je recepten vinden met ingrediënten die je in huis hebt. De ontbrekende ingrediënten worden getoond als lijst. Je kan de resultaten filteren op vlees, vis en groentes. Je kan ook je favoriete recepten opslaan en delen met een andere gebruiken. Zo bespaart men geld en gaan we voedselverspilling tegen. Je kan de resultaten sorteren op bereidingstijd, prijsklasse en aantal extra benodigde ingrediënten. Deze applicatie is voornamelijk bedoeld voor studenten en helpt voedselverspilling tegen te gaan.
 ## Features
 - **Vind een recept op basis van ingrediënten (automatisch aanvullen bij zoeken ingredient)**
-- **Stel (eventueel) een boodschappenlijst op met de ontbrekende ingrediënten**
+- Stel (eventueel) een boodschappenlijst op met de ontbrekende ingrediënten
 - Knop om boodschappen toe te voegen aan Albert Heijn-lijst.
 - Filter resultaten op groente, vlees en vis
 - **Sla je favoriete recepten op**
-- **Deel recepten met andere gebruikers**
+- **Deel recepten op sociale media**
 - **Sorteren op bereidingstijd, prijsklasse en aantal extra benodigde ingrediënten**
 
 _Vetgedrukt = MVP_

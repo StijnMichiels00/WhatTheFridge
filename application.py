@@ -298,8 +298,8 @@ def addfavorite():
 def favorites():
 
     if request.method == "POST":
+        # code to remove favorite
         pass
-
     else:
         saved_recipes = db.execute("SELECT recipe FROM saved WHERE user_id=:user_id", user_id=session["user_id"])
         ids = []
