@@ -212,12 +212,12 @@ def profile():
             preferences = preferences + " vegetarian"
 
         # If vegan selected, add vegan to preferences
-        if vegetarian == "vegan":
+        if vegan == "vegan":
             preferences = preferences + " vegan"
 
         db.execute("UPDATE users SET exclusions=:p WHERE user_id=:user_id", p=preferences, user_id=session["user_id"])
 
-        return render_template("index.html", preferences=preferences)
+        return redirect("/profile")
 
     else:
          # Retrieve username from database
