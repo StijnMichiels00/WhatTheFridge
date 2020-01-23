@@ -190,6 +190,7 @@ def profile():
 
     # Retrieve username from database
     username = db.execute("SELECT username FROM users WHERE user_id=:user_id", user_id=session["user_id"])[0]["username"]
+    # Retrieve exclusions from database
     check = [x["exclusions"] for x in (db.execute("SELECT * FROM users WHERE user_id=:user_id", user_id=session["user_id"]))]
 
     # Create lists for checkboxes
