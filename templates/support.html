@@ -15,13 +15,17 @@
                 <p><strong>Question:</strong> How can I filter out meat or fish?
         <br><strong>Answer:</strong> No worries about that! We're happy to help you find recipes which fit into your diet. Just head to your profile and select your preferences.</p>
                         <p><strong>Question:</strong> I'm trying to access a page but I'm getting an error message? What can I do?
-        <br><strong>Answer:</strong> Hmm, that doesn't sound right. Best thing to do here is get in touch with us with the button below. Be sure to provide what you were trying to do and what error message you got in your e-mail.</p>
+        <br><strong>Answer:</strong> Hmm, that doesn't sound right. Best thing to do here is get in touch with us with the button below. Be sure to let us know what you were trying to do and what error message you got.</p>
 
 <hr>
         <form action="mailto:info@whatthefridge.com" method="post">
             {% if username %}
-            <input style="display:none" name="username" value="{{ username }}" type="text">
+            <input style="display:none" name="Username" value="{{ username }}" type="text">
                     <p>Your username is: <strong>{{username}}</strong></p>
+            {% endif %}
+            {% if request.args.get('code') %}
+            <input style="display:none" name="Errorcode" value="{{ request.args.get('code') }}" type="text">
+                    <p>Recent error code: <strong>{{request.args.get('code')}}</strong></p>
             {% endif %}
 
             <button class="btn btn-info" type="submit">I still need help</button>

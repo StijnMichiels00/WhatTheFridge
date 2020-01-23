@@ -6,18 +6,32 @@
 {% block class %}favorite{% endblock %}
 {% block main %}
     <div class="jumbotron">
-        <h1>
-            <strong>Favorites</strong>
-        </h1>
-    <table class="table table-striped" style="widt:100%">
+    <h1 class="display-4">Favorites</h1>
+    <p class="lead">Rediscover recipes you know you love</p>
+
+    {% if info_recipes %}
+
+    <table class="table table-striped table-bordered table-light" style="color:black">
       <tr>
-        <th style="color:seagreen">Recipe</th>
+        <thead class="thead-light">
+        <th>Recipe</th>
+        <th></th>
+        <th>Saved</th>
+        <th>Remove</th>
+        </thead>
       </tr>
-      {% for name, image in titleimg.items() %}
+    <tbody>
+      {% for recipe in info_recipes %}
       <tr>
-        <td><img src={{ image }} class="img-thumbnail">{{ name }}</td>
+        <td style="width:200px"><a href="/recipe?id={{ recipe.id }}"><img src={{recipe.image}} alt="{{ recipe.title }}" class="img-thumbnail"></a> </td>
+        <td><a href="/recipe?id={{recipe["id"]}}" style="text-decoration:None; color:black">{{ recipe["title"] }}</a></td>
+        <td>{{ timestamp[recipe["id"]] }}</td>
+        <td><a href="#" class="btn btn-danger"><i class="fas fa-minus-circle"></i></a></td>
       </tr>
       {% endfor %}
+</tbody>
     </table>
-
+      {% else %}
+      <p>You don't have any favorites saved.</p>
+      {% endif %}
 {% endblock %}

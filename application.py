@@ -8,7 +8,7 @@ from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import login_required, errorhandle, lookup, lookup_recipe
+from helpers import login_required, errorhandle, lookup, lookup_recipe, lookup_bulk
 
 # Configure application
 app = Flask(__name__)
@@ -35,6 +35,7 @@ db = SQL("sqlite:///wtf.db")
 
 @app.route("/")
 def home():
+    # Return splash page
     return render_template("index.html")
 
 
@@ -43,22 +44,22 @@ def register():
     if request.method == "POST":
         # Must provide username
         if not request.form.get("username"):
-            flash("Your username can't be empty.", "warning")
+            flash("Your username can't be empty.", "error")
             return render_template("register.html")
 
         # Must provide password
         elif not request.form.get("password"):
-            flash("Your password can't be empty.", "warning")
+            flash("Your password can't be empty.", "error")
             return render_template("register.html")
 
         # Must provide confirmation
         elif not request.form.get("confirmation"):
-            flash("Your password confirmation can't be empty.", "warning")
+            flash("Your password confirmation can't be empty.", "error")
             return render_template("register.html")
 
         # Password and confirmation have to match to successfully register
         elif request.form.get("password") != request.form.get("confirmation"):
-            flash("Your password and confimation don't match.", "warning")
+            flash("Your password and confimation don't match.", "error")
             return render_template("register.html")
 
         # Checks databse if username is already taken
@@ -67,12 +68,12 @@ def register():
 
         # Checks if username is a letter or a number for safety reasons
         if not (request.form.get("username")).isdigit() and not (request.form.get("username")).isalpha():
-            flash("Fill in a username with a letter or number!", "warning")
+            flash("Fill in a username with a letter or number!", "error")
             return render_template("register.html")
 
         # Return error message if username is already taken
         if len(user_taken) == 1:
-            flash("This username has been taken. Choose something else...", "warning")
+            flash("This username has been taken. Choose something else...", "error")
             return render_template("register.html")
 
         # Insert username and password into database
@@ -83,39 +84,12 @@ def register():
         session["user_id"] = user
 
         # Redirect to our search page
-        flash("Your account has been created", "success")
+        flash("Welcome to WhatTheFridge?!, "+ request.form.get("username") + ". You are now registered.", "success")
         return redirect("/search")
 
     else:
         return render_template("register.html")
 
-@app.route("/password", methods=["GET", "POST"])
-@login_required
-def password():
-    if request.method == "POST":
-        password = request.form.get("password")
-
-        # Haalt de huidige hash op
-        code0 = db.execute("SELECT hash FROM users WHERE id=:q", q=session["user_id"])
-        for cd in code0:
-            code = cd["hash"]
-
-        # Maakt nieuwe hash
-        npassword = request.form.get("newpassword")
-        newpassword = generate_password_hash(npassword)
-
-        # Wachtwoord check
-        if check_password_hash(code, password) == False:
-            flash("Password incorrect", "warning")
-            return render_template("password.html")
-
-        # Veranderen wachtwoord in database
-        else:
-            db.execute("UPDATE users SET hash=:p WHERE id=:d", p=newpassword, d=session["user_id"])
-            return render_template("index.html")
-
-    else:
-        return render_template("password.html")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -127,12 +101,12 @@ def login():
 
         # Must provide a username
         if not request.form.get("username"):
-            flash("Your username can't be empty.", "warning")
+            flash("Your username can't be empty.", "error")
             return render_template("login.html")
 
         # Must provide a password
         elif not request.form.get("password"):
-            flash("Your password can't be empty.", "warning")
+            flash("Your password can't be empty.", "error")
             return render_template("login.html")
 
         # Checks databse if username is already taken
@@ -141,11 +115,11 @@ def login():
 
         # Checks if username is in database and if password corresponds with that user
         if len(user_taken) != 1 or not check_password_hash(user_taken[0]["hash"], request.form.get("password")):
-            flash("Invalid username and/or password.", "warning")
+            flash("Invalid username and/or password.", "error")
             return render_template("login.html")
 
         # Remember which user has logged in
-        session["user_id"] = user_taken[0]["id"]
+        session["user_id"] = user_taken[0]["user_id"]
 
         # Redirect to our search page
         flash("Welcome back, " + request.form.get("username") + "! You are now logged in.", "success")
@@ -156,50 +130,68 @@ def login():
 
 
 @app.route("/search", methods=["GET"])
-# @login_required
+@login_required
 def search():
+    # Make sure all ingredients in a GET-request are returned to page (for edit query button)
     if request.args.get("ingredients"):
-        ingre = request.args.get("ingredients").replace(",","\n")
-        return render_template("search.html",ingredients=ingre)
+        # Format them for textbox
+        ingredients = request.args.get("ingredients").replace(",","\n")
+        return render_template("search.html",ingredients=ingredients)
     return render_template("search.html")
 
 
 @app.route("/support", methods=["GET"])
-# @login_required
 def support():
     if not session:
+        # No personalised support page when logged out
         return render_template("support.html")
     else:
-        username = db.execute("SELECT username FROM users WHERE id=:id", id=session["user_id"])[0]["username"]
+        # Get personalised support page when user is logged in
+        username = db.execute("SELECT username FROM users WHERE user_id=:id", id=session["user_id"])[0]["username"]
         return render_template("support.html", username=username)
 
 
 @app.route("/results", methods=["POST"])
-# @login_required
+@login_required
 def results():
     ingredients=request.form.get("itemlist")
+    ranking=request.form.get("ranking")
     if not ingredients:
         flash("Provide at least one ingredient.", "warning")
         return redirect("/search")
-    recipes_info = lookup(ingredients)
 
+    # Lookup
+    recipes_info = lookup(ingredients, ranking=1)
+
+    # Lookup extra info
+    # Create string of recipes ids
+    ids = []
+    for recipe in recipes_info[0]:
+        ids.append(recipe['id'])
+
+    recipes_extra_info = lookup_bulk(ids)
+
+    # Error when results are empty (API limit reached (probably))
     if recipes_info == None:
         flash("Something went wrong. Get in touch with us for more information (402).", "error")
         return redirect("/search")
+    # Error when no results could be found
     if len(recipes_info[0]) == 0:
         flash("We couldn't find any results.", "error")
         return redirect("/search")
+    # return results page
+    return render_template("results.html", recipes=recipes_info[0], ingredients=recipes_info[1], recipe_count=len(recipes_info[0]), extra_info=recipes_extra_info)
 
-    return render_template("results.html", recipes=recipes_info[0], ingredients=recipes_info[1], recipe_count=len(recipes_info[0]))
 
 
 @app.route("/profile", methods=["GET", "POST"])
-# @login_required
+@login_required
 def profile():
 
     # Retrieve username from database
-    username = [x["username"] for x in (db.execute("SELECT username FROM users WHERE id=:q", q=session["user_id"]))][0]
-    check = [x["favorite"] for x in (db.execute("SELECT * FROM favorites WHERE user_id=:n", n=session["user_id"]))]
+    username = db.execute("SELECT username FROM users WHERE user_id=:user_id", user_id=session["user_id"])[0]["username"]
+    # Retrieve exclusions from database
+    check = [x["exclusions"] for x in (db.execute("SELECT * FROM users WHERE user_id=:user_id", user_id=session["user_id"]))]
 
     # Create lists for checkboxes
     box_meat = []
@@ -235,8 +227,6 @@ def profile():
             return redirect("/")
 
 
-        recipes = db.execute("SELECT * FROM saved WHERE id=:n", n=session["user_id"])
-        print(recipes)
         # If meat selected, add meat to preferences
         if meat == "Meat":
             preferences.append(meat)
@@ -250,10 +240,10 @@ def profile():
             preferences.append("Meat'Fish")
 
         if len(check) == 0:
-            db.execute("INSERT INTO favorites (favorite, user_id) VALUES (:favorite, :user_id)", favorite=preferences, user_id=session["user_id"])
+            db.execute("INSERT INTO users (exclusions, user_id) VALUES (:favorite, :user_id)", favorite=preferences, user_id=session["user_id"])
 
         else:
-            db.execute("UPDATE favorites SET favorite=:p WHERE user_id=:d", p=preferences, d=session["user_id"])
+            db.execute("UPDATE users SET exclusions=:p WHERE user_id=:user_id", p=preferences, user_id=session["user_id"])
 
         return render_template("index.html", preferences=preferences)
 
@@ -262,51 +252,93 @@ def profile():
 
 
 @app.route("/addfavorite", methods=["GET"])
-# @login_required
+@login_required
 def addfavorite():
-    select0 = db.execute("SELECT recipe FROM saved WHERE id=:d", d=session["user_id"])
-    select = []
-    fav0 = db.execute("SELECT recipe FROM saved WHERE id=:d", d=session["user_id"])
-    fav = []
-    title = []
-    image = []
-    titleimg = {}
-    for recipe in fav0:
-        fav.append(recipe["recipe"])
 
-    for recipe in fav:
-        print(recipe)
-        recipes_info = lookup_recipe(recipe)
-        title.append(recipes_info["title"])
-        image.append(recipes_info["image"])
-        titleimg[recipes_info["title"]]=recipes_info["image"]
+    id = request.args.get("id")
 
-    for recipe in select0:
-        select.append(recipe["recipe"])
-    saved = request.args.get("id")
-    if saved is not None:
-        db.execute("INSERT INTO saved (recipe, id) VALUES (:recipe, :d)", recipe=saved, d=session["user_id"])
-        select0 = db.execute("SELECT recipe FROM saved WHERE id=:d", d=session["user_id"])
-        select = []
-        for recipe in select0:
-            select.append(recipe["recipe"])
-        return render_template("favorite.html", select=select, title=title, image=image)
+    if id:
+        db.execute("INSERT INTO saved (recipe, user_id) VALUES (:recipe, :user_id)", recipe=id, user_id=session["user_id"])
+        flash("Saved!")
+        return redirect(request.referrer)
+
     else:
-        return render_template("favorite.html", select=select, title=title, image=image, titleimg=titleimg)
+        errorhandle("NoID",400)
+
+@app.route("/favorites", methods=["GET", "POST"])
+@login_required
+def favorites():
+
+    if request.method == "POST":
+        # TODO code to remove favorite
+        pass
+    else:
+        saved_recipes = db.execute("SELECT * FROM saved WHERE user_id=:user_id", user_id=session["user_id"])
+        ids = []
+        timestamp = dict()
+        for recipe in saved_recipes:
+            ids.append(recipe['recipe'])
+            timestamp[recipe['recipe']] = recipe['timestamp']
+        info_recipes = lookup_bulk(ids)
+
+        return render_template("favorite.html", info_recipes=info_recipes, timestamp=timestamp)
 
 @app.route("/recipe", methods=["GET"])
-# @login_required
+@login_required
 def recipe():
+    # Get ID from get argument
     id=request.args.get("id")
+
+
+
+    # Find recipe info with ID
     recipeinfo = lookup_recipe(id)
+
+    # The recipe isn't found with the ID
+    if recipeinfo is None:
+        return errorhandle("IDErrorUnavailable", 400)
     url = recipeinfo["sourceUrl"]
+
+    # change every url to https (for safety/iFrame rules)
     url = url.replace('http://','https://')
+
+    # Fetch recipes to check the saved ids
+    saved_recipes = db.execute("SELECT * FROM saved WHERE user_id=:user_id AND recipe=:recipe", user_id=session["user_id"], recipe=id)
+    # If recipe already is in favourites (flash message to modify save button)
+    if len(saved_recipes) > 0:
+        flash("Internal: already saved")
+
     return render_template("recipe_iframe.html", url=url, recipeinfo=recipeinfo, id=id)
 
 
-@app.route("/help", methods=["GET"])
-def helps():
-    return print("TODO")
+@app.route("/password", methods=["GET", "POST"])
+@login_required
+def password():
+    if request.method == "POST":
+        password = request.form.get("password")
+
+
+        # Retrieve current hash
+        code0 = db.execute("SELECT hash FROM users WHERE id=:q", q=session["user_id"])
+        for cd in code0:
+            code = cd["hash"]
+
+        # Create new hash
+        npassword = request.form.get("newpassword")
+        newpassword = generate_password_hash(npassword)
+
+        # Check if password is correct
+        if check_password_hash(code, password) == False:
+            flash("Your current password incorrect", "error")
+            return render_template("password.html")
+
+        # Change password
+        else:
+            db.execute("UPDATE users SET hash=:p WHERE user_id=:d", p=newpassword, d=session["user_id"])
+            return render_template("index.html")
+
+    else:
+        return render_template("password.html")
 
 
 def errorhandler(e):

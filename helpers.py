@@ -4,6 +4,7 @@ import os
 from flask import redirect, render_template, request, session
 from functools import wraps
 
+api_key="c413253e08574e40ba92563a5126e415"
 def login_required(f):
     """
     Decorate routes to require login.
@@ -31,7 +32,7 @@ def errorhandle(message, code=400):
     return render_template("error.html", code=code, message=escape(message)), code
 
 
-def lookup(ingredients):
+def lookup(ingredients,ranking):
     """
     Lookup recipes by ingredients
 
@@ -41,8 +42,7 @@ def lookup(ingredients):
     ingredients = ','.join(ingredients_string)
 
     try:
-        api_key = "c413253e08574e40ba92563a5126e415"
-        response = requests.get(f"https://api.spoonacular.com/recipes/findByIngredients?ingredients={(ingredients)}&apiKey={api_key}")
+        response = requests.get(f"https://api.spoonacular.com/recipes/findByIngredients?ingredients={(ingredients)}&ranking={ranking}&number=2&apiKey={api_key}")
         response.raise_for_status()
     except requests.RequestException:
         return None
@@ -55,14 +55,13 @@ def lookup(ingredients):
     except (KeyError, TypeError, ValueError):
         return None
 
-def lookup_recipe(id):
+def lookup_recipe(id, ranking=1):
     """
     Lookup recipes by id
 
     https://spoonacular.com/food-api/docs#Search-Recipes-by-Ingredients
     """
     try:
-        api_key = "c413253e08574e40ba92563a5126e415"
         response = requests.get(f"https://api.spoonacular.com/recipes/{id}/information?apiKey={api_key}")
         response.raise_for_status()
     except requests.RequestException:
@@ -72,6 +71,29 @@ def lookup_recipe(id):
     try:
         recipeinfo = response.json()
         return recipeinfo
+
+    except (KeyError, TypeError, ValueError):
+        return None
+
+def lookup_bulk(ids):
+    """
+    Bulk lookup recipes by id
+
+    https://spoonacular.com/food-api/docs#Get-Recipe-Information-Bulk
+    """
+    ids_list = [str(i) for i in ids]
+    ids_string = ",".join(ids_list)
+
+    try:
+        response = requests.get(f"https://api.spoonacular.com/recipes/informationBulk?ids={ids_string}&apiKey={api_key}")
+        response.raise_for_status()
+    except requests.RequestException:
+        return None
+
+    # Parse response
+    try:
+        recipesinfo = response.json()
+        return recipesinfo
 
     except (KeyError, TypeError, ValueError):
         return None
