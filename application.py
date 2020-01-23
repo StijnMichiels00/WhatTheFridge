@@ -270,7 +270,7 @@ def addfavorite():
 def favorites():
 
     if request.method == "POST":
-        # TODO code to remove favorite
+        #  db.execute("REMOVE ")
         pass
     else:
         saved_recipes = db.execute("SELECT * FROM saved WHERE user_id=:user_id", user_id=session["user_id"])
