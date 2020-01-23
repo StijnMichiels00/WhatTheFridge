@@ -188,6 +188,34 @@ def results():
 @login_required
 def profile():
 
+<<<<<<< HEAD
+=======
+    # Retrieve username from database
+    username = db.execute("SELECT username FROM users WHERE user_id=:user_id", user_id=session["user_id"])[0]["username"]
+    # Retrieve exclusions from database
+    check = [x["exclusions"] for x in (db.execute("SELECT * FROM users WHERE user_id=:user_id", user_id=session["user_id"]))]
+
+    # Create lists for checkboxes
+    box_meat = []
+    box_fish = []
+    box_all = []
+
+    # If user selected meat, keep meat selected
+    if "Meat" in check:
+        box_meat.append("checked")
+        box_meat = box_meat[0]
+
+    # If user selected fish, keep fish selected
+    if "Fish" in check:
+        box_fish.append("checked")
+        box_fish = box_fish[0]
+
+    # If user selected fish and meat, keep both selected
+    if "Meat'Fish" in check:
+        box_all.append("checked")
+        box_all = box_all[0]
+
+>>>>>>> ec1047f215667d383ef473a02fdab7ad721c728d
     if request.method == "POST":
         gluten_free = request.form.get("gluten_free")
         vegetarian = request.form.get("vegetarian")
@@ -253,6 +281,7 @@ def addfavorite():
 
     id = request.args.get("id")
 
+    # Save favorites from user in database
     if id:
         db.execute("INSERT INTO saved (recipe, user_id) VALUES (:recipe, :user_id)", recipe=id, user_id=session["user_id"])
         flash("Saved!")
@@ -266,7 +295,7 @@ def addfavorite():
 def favorites():
 
     if request.method == "POST":
-        # TODO code to remove favorite
+        #  db.execute("REMOVE ")
         pass
     else:
         saved_recipes = db.execute("SELECT * FROM saved WHERE user_id=:user_id", user_id=session["user_id"])
@@ -285,8 +314,6 @@ def recipe():
     # Get ID from get argument
     id=request.args.get("id")
 
-
-
     # Find recipe info with ID
     recipeinfo = lookup_recipe(id)
 
@@ -295,7 +322,7 @@ def recipe():
         return errorhandle("IDErrorUnavailable", 400)
     url = recipeinfo["sourceUrl"]
 
-    # change every url to https (for safety/iFrame rules)
+    # Change every url to https (for safety/iFrame rules)
     url = url.replace('http://','https://')
 
     # Fetch recipes to check the saved ids
@@ -312,7 +339,6 @@ def recipe():
 def password():
     if request.method == "POST":
         password = request.form.get("password")
-
 
         # Retrieve current hash
         code0 = db.execute("SELECT hash FROM users WHERE id=:q", q=session["user_id"])
@@ -332,7 +358,6 @@ def password():
         else:
             db.execute("UPDATE users SET hash=:p WHERE user_id=:d", p=newpassword, d=session["user_id"])
             return render_template("index.html")
-
     else:
         return render_template("password.html")
 
