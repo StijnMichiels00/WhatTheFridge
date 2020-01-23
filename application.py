@@ -188,34 +188,11 @@ def results():
 @login_required
 def profile():
 
-    # Retrieve username from database
-    username = db.execute("SELECT username FROM users WHERE user_id=:user_id", user_id=session["user_id"])[0]["username"]
-    check = [x["exclusions"] for x in (db.execute("SELECT * FROM users WHERE user_id=:user_id", user_id=session["user_id"]))]
-
-    # Create lists for checkboxes
-    box_meat = []
-    box_fish = []
-    box_all = []
-
-    # If user selected meat, keep meat selected
-    if "Meat" in check:
-        box_meat.append("checked")
-        box_meat = box_meat[0]
-
-    # If user selected fish, keep fish selected
-    if "Fish" in check:
-        box_fish.append("checked")
-        box_fish = box_fish[0]
-
-    # If user selected fish and meat, keep both selected
-    if "Meat'Fish" in check:
-        box_all.append("checked")
-        box_all = box_all[0]
-
     if request.method == "POST":
-        meat = request.form.get("meat")
-        fish = request.form.get("fish")
-        preferences = []
+        gluten_free = request.form.get("gluten_free")
+        vegetarian = request.form.get("vegetarian")
+        vegan = request.form.get("vegan")
+        preferences = ""
 
         # Log out button
         logout = request.form.get("log_out")
@@ -226,28 +203,48 @@ def profile():
             return redirect("/")
 
 
-        # If meat selected, add meat to preferences
-        if meat == "Meat":
-            preferences.append(meat)
+        # If gluten free selected, add gluten free to preferences
+        if gluten_free == "gluten_free":
+            preferences = preferences + " gluten_free"
 
-        # If fish selected, add fish to preferences
-        if fish == "Fish":
-            preferences.append(fish)
+        # If vegetarian selected, add vegetarian to preferences
+        if vegetarian == "vegetarian":
+            preferences = preferences + " vegetarian"
 
-        # If meat and fish selected, add both to preferences
-        if check == "Meat'Fish":
-            preferences.append("Meat'Fish")
+        # If vegan selected, add vegan to preferences
+        if vegetarian == "vegan":
+            preferences = preferences + " vegan"
 
-        if len(check) == 0:
-            db.execute("INSERT INTO users (exclusions, user_id) VALUES (:favorite, :user_id)", favorite=preferences, user_id=session["user_id"])
-
-        else:
-            db.execute("UPDATE users SET exclusions=:p WHERE user_id=:user_id", p=preferences, user_id=session["user_id"])
+        db.execute("UPDATE users SET exclusions=:p WHERE user_id=:user_id", p=preferences, user_id=session["user_id"])
 
         return render_template("index.html", preferences=preferences)
 
     else:
-        return render_template("profile.html", username=username, box_meat=box_meat, box_fish=box_fish, box_all=box_all)
+         # Retrieve username from database
+        username = db.execute("SELECT username FROM users WHERE user_id=:user_id", user_id=session["user_id"])[0]["username"]
+        check = db.execute("SELECT exclusions FROM users WHERE user_id=:user_id", user_id=session["user_id"])[0]["exclusions"]
+        print(check)
+        print("--------------------------------------------------------------------------")
+        print(check.split(" "))
+        # Create lists for checkboxes
+        box_gluten_free = ""
+        box_vegetarian = ""
+        box_vegan = ""
+
+        if check:
+            # If user selected gluten free, keep gluten free selected
+            if "gluten_free" in check:
+                box_gluten_free = "checked"
+
+            # If user selected vegetarian, keep vegetarian selected
+            if "vegetarian" in check:
+                box_vegetarian = "checked"
+
+            # If user selected vegan, keep vegan selected
+            if "vegan" in check:
+                box_vegan = "checked"
+
+            return render_template("profile.html", username=username, box_gluten_free=box_gluten_free, box_vegetarian=box_vegetarian, box_vegan=box_vegan)
 
 
 @app.route("/addfavorite", methods=["GET"])

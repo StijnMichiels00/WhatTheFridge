@@ -15,8 +15,9 @@
             <h3>Exclude from search:</h3>
             <p>Check the box to exclude this ingredient from your search</p>
             <form action="/profile" method="post">
-                <input type="checkbox" name="meat" value="Meat" {{box_meat}} {{box_all}}> Meat<br>
-                <input type="checkbox" name="fish" value="Fish" {{box_fish}} {{box_all}}> Fish<br><br>
+                <input type="checkbox" name="gluten_free" value="gluten_free" {{box_meat}} {{box_all}}> Gluten Free<br>
+                <input type="checkbox" name="vegetarian" value="vegetarian" {{box_fish}} {{box_all}}> Vegetarian<br>
+                <input type="checkbox" name="vegan" value="vegan" {{box_fish}} {{box_all}}> Vegan<br><br>
                 <input class="btn btn-warning" type="submit" value="Submit exclusions">
             </form>
             <hr>
