@@ -33,7 +33,7 @@
     </head>
 
     <body class="{% block class %}{% endblock %}">
-      <nav class="navbar fixed-top navbar-dark navbar-expand-lg align-right" style="background-color:seagreen">
+      <nav class="navbar navbar-dark navbar-expand-lg align-right" style="background-color:seagreen">
             {% if session.user_id %}
             <a class="navbar-brand" href="/search"> <span class="red">WhatTheFridge?!</span></a>
             {% else %}
@@ -74,7 +74,7 @@
             </div>
         </nav>
 
-<iframe src="{{url}}" style="position:relative; height:100%; width:100%"></iframe>
+<iframe src="{{url}}" style="position:absolute; height:100%; width:100%"></iframe>
 
     </body>
 
