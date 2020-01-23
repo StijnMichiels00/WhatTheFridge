@@ -24,7 +24,7 @@
       {% for recipe in info_recipes %}
       <tr>
         <td style="width:200px"><a href="/recipe?id={{ recipe.id }}"><img src={{recipe.image}} alt="{{ recipe.title }}" class="img-thumbnail"></a> </td>
-        <td><a href="/recipe?id={{recipe["id"]}}">{{ recipe["title"] }}</a></td>
+        <td><a href="/recipe?id={{recipe["id"]}}" style="text-decoration:None; color:black">{{ recipe["title"] }}</a></td>
         <td>{{ timestamp[recipe["id"]] }}</td>
         <td><a href="#" class="btn btn-danger"><i class="fas fa-minus-circle"></i></a></td>
       </tr>
