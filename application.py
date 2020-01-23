@@ -188,34 +188,6 @@ def results():
 @login_required
 def profile():
 
-<<<<<<< HEAD
-=======
-    # Retrieve username from database
-    username = db.execute("SELECT username FROM users WHERE user_id=:user_id", user_id=session["user_id"])[0]["username"]
-    # Retrieve exclusions from database
-    check = [x["exclusions"] for x in (db.execute("SELECT * FROM users WHERE user_id=:user_id", user_id=session["user_id"]))]
-
-    # Create lists for checkboxes
-    box_meat = []
-    box_fish = []
-    box_all = []
-
-    # If user selected meat, keep meat selected
-    if "Meat" in check:
-        box_meat.append("checked")
-        box_meat = box_meat[0]
-
-    # If user selected fish, keep fish selected
-    if "Fish" in check:
-        box_fish.append("checked")
-        box_fish = box_fish[0]
-
-    # If user selected fish and meat, keep both selected
-    if "Meat'Fish" in check:
-        box_all.append("checked")
-        box_all = box_all[0]
-
->>>>>>> ec1047f215667d383ef473a02fdab7ad721c728d
     if request.method == "POST":
         gluten_free = request.form.get("gluten_free")
         vegetarian = request.form.get("vegetarian")
