@@ -257,6 +257,7 @@ def addfavorite():
 
     id = request.args.get("id")
 
+    # Save favorites from user in database
     if id:
         db.execute("INSERT INTO saved (recipe, user_id) VALUES (:recipe, :user_id)", recipe=id, user_id=session["user_id"])
         flash("Saved!")
@@ -289,8 +290,6 @@ def recipe():
     # Get ID from get argument
     id=request.args.get("id")
 
-
-
     # Find recipe info with ID
     recipeinfo = lookup_recipe(id)
 
@@ -299,7 +298,7 @@ def recipe():
         return errorhandle("IDErrorUnavailable", 400)
     url = recipeinfo["sourceUrl"]
 
-    # change every url to https (for safety/iFrame rules)
+    # Change every url to https (for safety/iFrame rules)
     url = url.replace('http://','https://')
 
     # Fetch recipes to check the saved ids
@@ -316,7 +315,6 @@ def recipe():
 def password():
     if request.method == "POST":
         password = request.form.get("password")
-
 
         # Retrieve current hash
         code0 = db.execute("SELECT hash FROM users WHERE id=:q", q=session["user_id"])
@@ -336,7 +334,6 @@ def password():
         else:
             db.execute("UPDATE users SET hash=:p WHERE user_id=:d", p=newpassword, d=session["user_id"])
             return render_template("index.html")
-
     else:
         return render_template("password.html")
 

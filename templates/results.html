@@ -5,15 +5,16 @@
 {% endblock %}
 
 {% block main %}
+<script src="/static/sorttable.js"></script>
 <h1 align="left">Recipes: <i>{{ recipe_count }} results</i></h1>
 <p class="lead">Searching recipes with: <strong>{{ ingredients.capitalize().replace(",",", ") }}</strong></p>
 <a href="/search?ingredients={{ ingredients }}"><button class="btn btn-info">Edit ingredients</button></a><br>
 
-<script src="/static/sorttable.js"></script>
 
-    <table class="table table-borderless sortable">
-      <tr>
-        <thead>
+    <table class="table sortable table-borderless ">
+       <thead>
+         <tr>
+
         <th>
         </th>
         <th>
@@ -25,11 +26,13 @@
         <th>
           <a href="#"><strong>Price Per Serving</strong></a>
         </th>
-        </thead>
-      </tr>
+
+      </tr></thead>
+      <tbody>
     {% for i in range(recipe_count) %}
 
       <tr>
+
         <td style="width:200px"><a href="/recipe?id={{ recipes[i].id }}"><img src={{recipes[i].image}} alt="{{ recipes[i].title }}" class="img-thumbnail"></a> </td>
         <td><a href="/recipe?id={{ recipes[i].id }}">{{ recipes[i].title }}</a><br><strong>Ingredients you have:</strong> {% for ingredient in recipes[i].usedIngredients %} {{ingredient.name.capitalize() }}{{ "," if not loop.last }} {% endfor %}
         {% if recipes[i].missedIngredients %}<br><strong>Missing ingredients:</strong> {% for ingredient in recipes[i].missedIngredients %} {{ ingredient.name.capitalize() }}{{ "," if not loop.last }}{% endfor %}{% endif %}<br>
@@ -38,8 +41,8 @@
         <td>${{(extra_info[i].pricePerServing / 100)|round(2, 'common')}}</td>
       </tr>
 
-
     {% endfor %}
+    </tbody>
     </table>
 
 {% endblock %}
