@@ -9,9 +9,9 @@
         <h1>
             <strong>Profile</strong>
         </h1>
-        <h3>Username: {{username}}<br><br></h3>
+        <h3>Username: {{username}}<br></h3>
         <div>
-            <hr style="border: 1px solid white">
+            <hr>
             <h3>Exclude from search:</h3>
             <p>Check the box to exclude this ingredient from your search</p>
             <form action="/profile" method="post">
@@ -19,13 +19,13 @@
                 <input type="checkbox" name="fish" value="Fish" {{box_fish}} {{box_all}}> Fish<br><br>
                 <input class="btn btn-warning" type="submit" value="Submit exclusions">
             </form>
-            <hr style="border: 1px solid white">
-        </div><br><br>
+            <hr>
+        </div><br>
         <form action="/password">
             <button class="btn btn-primary" type="submit">Change password</button><br><br>
         </form>
         <form action="/profile" method="post">
             <button class="btn btn-danger" type="submit" name="log_out">Logout</button>
-        </form>'
+        </form>
     </div>
 {% endblock %}
