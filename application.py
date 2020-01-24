@@ -267,6 +267,8 @@ def addfavorite():
 def favorites():
 
     if request.method == "POST":
+        if request.form.get("Submit exclusions"):
+            print("test")
         #  db.execute("REMOVE ")
         pass
     else:
