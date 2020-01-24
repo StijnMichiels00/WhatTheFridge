@@ -263,18 +263,36 @@ def addfavorite():
 @login_required
 def favorites():
 
-    if request.method == "POST":
+    # if request.method == "POST":
+
+    #     print("test")
+        # return render_template("favorite.html")
         #  db.execute("REMOVE ")
+
+    saved_recipes = db.execute("SELECT * FROM saved WHERE user_id=:user_id", user_id=session["user_id"])
+    ids = []
+    timestamp = dict()
+    for recipe in saved_recipes:
+        ids.append(recipe['recipe'])
+        timestamp[recipe['recipe']] = recipe['timestamp']
         pass
     else:
         saved_recipes = db.execute("SELECT * FROM saved WHERE user_id=:user_id", user_id=session["user_id"])
+
         ids = []
         timestamp = dict()
         for recipe in saved_recipes:
             ids.append(recipe['recipe'])
             timestamp[recipe['recipe']] = recipe['timestamp']
+        if None in ids:
+            errorhandle("DBCorruptfor", 400)
         info_recipes = lookup_bulk(ids)
 
+    if request.method == "POST":
+        delete = (request.form.get("delete"))
+        db.execute("DELETE FROM saved WHERE recipe=:r", r=delete)
+        return redirect("/favorites")
+    else:
         return render_template("favorite.html", info_recipes=info_recipes, timestamp=timestamp)
 
 @app.route("/recipe", methods=["GET"])

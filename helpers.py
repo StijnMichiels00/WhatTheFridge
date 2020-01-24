@@ -4,7 +4,7 @@ import os
 from flask import redirect, render_template, request, session
 from functools import wraps
 
-api_key="7e62ccdc82d342f2b25e6ede7107556c"
+api_key="679d12481f9e48e7bf7354e3b13dcaf2"
 def login_required(f):
     """
     Decorate routes to require login.
@@ -42,7 +42,7 @@ def lookup(ingredients,ranking):
     ingredients = ','.join(ingredients_string)
 
     try:
-        response = requests.get(f"https://api.spoonacular.com/recipes/findByIngredients?ingredients={(ingredients)}&ranking={ranking}&number=2&apiKey={api_key}")
+        response = requests.get(f"https://api.spoonacular.com/recipes/findByIngredients?ingredients={(ingredients)}&ranking={ranking}&number=10&apiKey={api_key}")
         response.raise_for_status()
     except requests.RequestException:
         return None
