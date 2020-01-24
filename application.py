@@ -328,26 +328,42 @@ def recipe():
 @login_required
 def password():
     if request.method == "POST":
-        password = request.form.get("password")
+        currentpassword = request.form.get("current_password")
+        newpassword = request.form.get("newpassword")
+        confirmnewpassword = request.form.get("confirmnewpassword")
+
+            # Must provide password
+        if not currentpassword:
+            flash("Your password can't be empty.", "error")
+            return render_template("password.html")
+
+        elif not newpassword:
+            flash("Your new password can't be empty.", "error")
+            return render_template("password.html")
+
+            # Must provide confirmation
+        elif not confirmnewpassword:
+            flash("Your password confirmation can't be empty.", "error")
+            return render_template("password.html")
+
+            # Password and confirmation have to match to successfully change password
+        elif newpassword != confirmnewpassword:
+            flash("Your password and confimation don't match.", "error")
+            return render_template("password.html")
 
         # Retrieve current hash
-        code0 = db.execute("SELECT hash FROM users WHERE id=:q", q=session["user_id"])
-        for cd in code0:
-            code = cd["hash"]
-
-        # Create new hash
-        npassword = request.form.get("newpassword")
-        newpassword = generate_password_hash(npassword)
+        currentpw = db.execute("SELECT hash FROM users WHERE user_id=:user_id", user_id=session["user_id"])[0]["hash"]
 
         # Check if password is correct
-        if check_password_hash(code, password) == False:
-            flash("Your current password incorrect", "error")
+        if check_password_hash(currentpw, currentpassword) == False:
+            flash("Your current password is incorrect", "error")
             return render_template("password.html")
 
         # Change password
         else:
-            db.execute("UPDATE users SET hash=:p WHERE user_id=:d", p=newpassword, d=session["user_id"])
-            return render_template("index.html")
+            db.execute("UPDATE users SET hash=:password WHERE user_id=:user_id", password=generate_password_hash(newpassword), user_id=session["user_id"])
+            flash("Your password was changed", "success")
+            return redirect("/profile")
     else:
         return render_template("password.html")
 
