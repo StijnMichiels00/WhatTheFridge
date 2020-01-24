@@ -26,7 +26,11 @@
         <td style="width:200px"><a href="/recipe?id={{ recipe.id }}"><img src={{recipe.image}} alt="{{ recipe.title }}" class="img-thumbnail"></a> </td>
         <td><a href="/recipe?id={{recipe["id"]}}">{{ recipe["title"] }}</a></td>
         <td>{{ timestamp[recipe["id"]] }}</td>
-        <td><a href="#" class="btn btn-danger"><i class="fas fa-minus-circle"></i></a></td>
+        <td>
+          <form action="/favorites" method="post">
+            <button class="btn btn-danger" type="submit" name="delete" value="{{ recipe["id"] }}"><i class="fas fa-minus-circle"></i></button>
+          </form>
+        </td>
       </tr>
       {% endfor %}
 </tbody>
