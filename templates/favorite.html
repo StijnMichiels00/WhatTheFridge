@@ -3,30 +3,34 @@
 {% block title %}
     Favorites
 {% endblock %}
+
 {% block class %}favorite{% endblock %}
+
 {% block main %}
-    <div class="jumbotron">
-    <h1 class="display-4">Favorites</h1>
-    <p class="lead">Rediscover recipes you know you love</p>
 <script src="/static/sorttable.js"></script>
 
-    {% if info_recipes %}
+<div class="jumbotron">
+<h1 class="display-4">Favorites</h1>
 
-    <table class="table sortable" style="color:white">
-      <thead>
+{% if info_recipes %}
+<p class="lead">Recipes you have saved</p>
+  <table class="table sortable" style="color:white">
+    <thead>
       <tr>
 
         <th class="sorttable_nosort"></th>
         <th>Recipe</th>
         <th>Time and date</th>
         <th class="sorttable_nosort"></th>
-        </tr>
-        </thead>
+
+      </tr>
+    </thead>
 
     <tbody>
+
       {% for recipe in info_recipes %}
       <tr>
-        <td style="width:200px;padding-left:0; padding-right:0"><a href="/recipe?id={{ recipe.id }}"><img src={{recipe.image}} alt="{{ recipe.title }}" class="img-thumbnail"></a> </td>
+        <td style="width:200px;padding-left:0; padding-right:0"><a href="/recipe?id={{ recipe.id }}"><img src={{recipe.image}} alt="{{ recipe.title }}" class="img-thumbnail"></a></td>
         <td><a href="/recipe?id={{recipe["id"]}}">{{ recipe["title"] }}</a></td>
         <td>{{ timestamp[recipe["id"]] }}</td>
         <td>
@@ -36,9 +40,13 @@
         </td>
       </tr>
       {% endfor %}
-</tbody>
-    </table>
-      {% else %}
-      <p>You don't have any favorites saved.</p>
-      {% endif %}
+
+    </tbody>
+  </table>
+
+  {% else %}
+  <p class="lead">You don't have any favorites saved. Get started by searching recipes!</p>
+  <a class="btn btn-primary" href="/search" role="button"><i class="fas fa-chevron-right"></i> Search</a>
+
+{% endif %}
 {% endblock %}

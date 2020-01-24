@@ -6,12 +6,15 @@
 {% block class %}error{% endblock %}
 {% block main %}
 <div class="jumbotron">
+
 <h1 class="display-4">Something went wrong...</h1>
+<p class="lead">We'll do our best to fix this right away!</p>
+
 <br>
 
-</p>
 <strong>Code: </strong> {{ code }}<br>
 <strong>Message: </strong> {{ message }} <br><br>
 <a class="btn btn-info" href="/support?code={{ code }}">Get support</a>
+
 </div>
 {% endblock %}
