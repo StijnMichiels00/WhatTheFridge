@@ -278,6 +278,17 @@ def favorites():
     for recipe in saved_recipes:
         ids.append(recipe['recipe'])
         timestamp[recipe['recipe']] = recipe['timestamp']
+        pass
+    else:
+        saved_recipes = db.execute("SELECT * FROM saved WHERE user_id=:user_id", user_id=session["user_id"])
+
+        ids = []
+        timestamp = dict()
+        for recipe in saved_recipes:
+            ids.append(recipe['recipe'])
+            timestamp[recipe['recipe']] = recipe['timestamp']
+        if None in ids:
+            errorhandle("DBCorruptfor", 400)
         info_recipes = lookup_bulk(ids)
 
     if request.method == "POST":

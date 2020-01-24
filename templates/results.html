@@ -6,12 +6,13 @@
 
 {% block main %}
 <script src="/static/sorttable.js"></script>
+
 <h1 align="left">Recipes: <i>{{ recipe_count }} results</i></h1>
 <p class="lead">Searching recipes with: <strong>{{ ingredients.capitalize().replace(",",", ") }}</strong></p>
 <a href="/search?ingredients={{ ingredients }}"><button class="btn btn-info">Edit ingredients</button></a><br>
 
 
-    <table class="table sortable table-borderless ">
+    <table class="table sortable table-borderless">
        <thead>
          <tr>
 

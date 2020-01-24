@@ -9,11 +9,17 @@
 <div class="jumbotron">
     <h1 class="display-4">Find recipes with ingredients you already own.</h1>
     <p class="lead"><strong>Help fight food waste and save money on groceries.</strong> There's no need to throw out food with WhatTheFridge. We're excited to help you and the environment.</p>
+
+
+
+
     {% if session.user_id %}
     <a class="btn btn-primary" href="/search" role="button"><i class="fas fa-chevron-right"></i> Open app</a>
     {% else %}
     <a class="btn btn-primary" href="/register" role="button"><i class="fas fa-chevron-right"></i> Get started</a>
     {% endif %}
+
+
 
 </div>
 {% endblock %}
