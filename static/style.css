@@ -1,6 +1,6 @@
 
 .jumbotron {
-    background-color:rgba(0, 0, 0, 0.6);
+    background-color:rgba(0, 0, 0, 0.4);
     color:white;
 }
 
@@ -126,6 +126,13 @@
   background-size: cover;
   -o-background-size: cover;
 }
+.results {
+  background: url('/static/results.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+}
 
 .alert-message {
   color: #31708f;
@@ -137,4 +144,14 @@
   color: #721c24;
   background-color: #f8d7da;
   border-color: #f5c6cb;
+}
+
+.form-control-plaintext{
+  color:white;
+
+}
+
+
+.form-control-plaintext::placeholder {
+  color:lightgray;
 }
