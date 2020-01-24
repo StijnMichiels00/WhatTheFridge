@@ -24,6 +24,7 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
+
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
@@ -32,6 +33,7 @@ Session(app)
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///wtf.db")
+
 
 @app.route("/")
 def home():
@@ -78,13 +80,13 @@ def register():
 
         # Insert username and password into database
         user = db.execute("INSERT INTO users (username, hash) VALUES (:username, :hash)",
-                   username=request.form.get("username"), hash=generate_password_hash(request.form.get("password"), method='pbkdf2:sha256', salt_length=8))
+                          username=request.form.get("username"), hash=generate_password_hash(request.form.get("password"), method='pbkdf2:sha256', salt_length=8))
 
         # Remember which user is logged in
         session["user_id"] = user
 
         # Redirect to our search page
-        flash("Welcome to WhatTheFridge?!, "+ request.form.get("username") + ". You are now registered.", "success")
+        flash("Welcome to WhatTheFridge?!, " + request.form.get("username") + ". You are now registered.", "success")
         return redirect("/search")
 
     else:
@@ -135,8 +137,8 @@ def search():
     # Make sure all ingredients in a GET-request are returned to page (for edit query button)
     if request.args.get("ingredients"):
         # Format them for textbox
-        ingredients = request.args.get("ingredients").replace(",","\n")
-        return render_template("search.html",ingredients=ingredients)
+        ingredients = request.args.get("ingredients").replace(",", "\n")
+        return render_template("search.html", ingredients=ingredients)
     return render_template("search.html")
 
 
@@ -154,8 +156,8 @@ def support():
 @app.route("/results", methods=["POST"])
 @login_required
 def results():
-    ingredients=request.form.get("itemlist")
-    ranking=request.form.get("ranking")
+    ingredients = request.form.get("itemlist")
+    ranking = request.form.get("ranking")
     if not ingredients:
         flash("Provide at least one ingredient.", "warning")
         return redirect("/search")
@@ -183,7 +185,6 @@ def results():
     return render_template("results.html", recipes=recipes_info[0], ingredients=recipes_info[1], recipe_count=len(recipes_info[0]), extra_info=recipes_extra_info)
 
 
-
 @app.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
@@ -202,7 +203,6 @@ def profile():
             flash("You are now logged out.", "success")
             return redirect("/")
 
-
         # If gluten free selected, add gluten free to preferences
         if gluten_free == "gluten_free":
             preferences = preferences + " gluten_free"
@@ -215,7 +215,11 @@ def profile():
         if vegan == "vegan":
             preferences = preferences + " vegan"
 
-        db.execute("UPDATE users SET exclusions=:p WHERE user_id=:user_id", p=preferences, user_id=session["user_id"])
+        if not gluten_free and not vegetarian and not vegan:
+            preferences = "NULL"
+
+        db.execute("UPDATE users SET exclusions=:preferences WHERE user_id=:user_id",
+                   preferences=preferences, user_id=session["user_id"])
 
         return redirect("/profile")
 
@@ -223,9 +227,6 @@ def profile():
          # Retrieve username from database
         username = db.execute("SELECT username FROM users WHERE user_id=:user_id", user_id=session["user_id"])[0]["username"]
         check = db.execute("SELECT exclusions FROM users WHERE user_id=:user_id", user_id=session["user_id"])[0]["exclusions"]
-        print(check)
-        print("--------------------------------------------------------------------------")
-        print(check.split(" "))
         # Create lists for checkboxes
         box_gluten_free = ""
         box_vegetarian = ""
@@ -246,6 +247,8 @@ def profile():
 
             return render_template("profile.html", username=username, box_gluten_free=box_gluten_free, box_vegetarian=box_vegetarian, box_vegan=box_vegan)
 
+        return render_template("profile.html", username=username, box_gluten_free=box_gluten_free, box_vegetarian=box_vegetarian, box_vegan=box_vegan)
+
 
 @app.route("/addfavorite", methods=["GET"])
 @login_required
@@ -260,13 +263,13 @@ def addfavorite():
         return redirect(request.referrer)
 
     else:
-        errorhandle("NoID",400)
+        errorhandle("NoID", 400)
+
 
 @app.route("/favorites", methods=["GET", "POST"])
 @login_required
 def favorites():
 
-    # Gets saved recipes information from database
     saved_recipes = db.execute("SELECT * FROM saved WHERE user_id=:user_id", user_id=session["user_id"])
     ids = []
     timestamp = dict()
@@ -274,6 +277,7 @@ def favorites():
         ids.append(recipe['recipe'])
         timestamp[recipe['recipe']] = recipe['timestamp']
         pass
+
     else:
         saved_recipes = db.execute("SELECT * FROM saved WHERE user_id=:user_id", user_id=session["user_id"])
 
@@ -295,11 +299,12 @@ def favorites():
     else:
         return render_template("favorite.html", info_recipes=info_recipes, timestamp=timestamp)
 
+
 @app.route("/recipe", methods=["GET"])
 @login_required
 def recipe():
     # Get ID from get argument
-    id=request.args.get("id")
+    id = request.args.get("id")
 
     # Find recipe info with ID
     recipeinfo = lookup_recipe(id)
@@ -310,10 +315,12 @@ def recipe():
     url = recipeinfo["sourceUrl"]
 
     # Change every url to https (for safety/iFrame rules)
-    url = url.replace('http://','https://')
+    url = url.replace('http://', 'https://')
 
     # Fetch recipes to check the saved ids
-    saved_recipes = db.execute("SELECT * FROM saved WHERE user_id=:user_id AND recipe=:recipe", user_id=session["user_id"], recipe=id)
+    saved_recipes = db.execute("SELECT * FROM saved WHERE user_id=:user_id AND recipe=:recipe",
+                               user_id=session["user_id"], recipe=id)
+
     # If recipe already is in favourites (flash message to modify save button)
     if len(saved_recipes) > 0:
         flash("Internal: already saved")
@@ -325,26 +332,44 @@ def recipe():
 @login_required
 def password():
     if request.method == "POST":
-        password = request.form.get("password")
+        currentpassword = request.form.get("current_password")
+        newpassword = request.form.get("newpassword")
+        confirmnewpassword = request.form.get("confirmnewpassword")
+
+        # Must provide password
+        if not currentpassword:
+            flash("Your password can't be empty.", "error")
+            return render_template("password.html")
+
+        elif not newpassword:
+            flash("Your new password can't be empty.", "error")
+            return render_template("password.html")
+
+        # Must provide confirmation
+        elif not confirmnewpassword:
+            flash("Your password confirmation can't be empty.", "error")
+            return render_template("password.html")
+
+        # Password and confirmation have to match to successfully change password
+        elif newpassword != confirmnewpassword:
+            flash("Your password and confimation don't match.", "error")
+            return render_template("password.html")
 
         # Retrieve current hash
-        code0 = db.execute("SELECT hash FROM users WHERE id=:q", q=session["user_id"])
-        for cd in code0:
-            code = cd["hash"]
-
-        # Create new hash
-        npassword = request.form.get("newpassword")
-        newpassword = generate_password_hash(npassword)
+        currentpw = db.execute("SELECT hash FROM users WHERE user_id=:user_id", user_id=session["user_id"])[0]["hash"]
 
         # Check if password is correct
-        if check_password_hash(code, password) == False:
-            flash("Your current password incorrect", "error")
+        if check_password_hash(currentpw, currentpassword) == False:
+            flash("Your current password is incorrect", "error")
             return render_template("password.html")
 
         # Change password
         else:
-            db.execute("UPDATE users SET hash=:p WHERE user_id=:d", p=newpassword, d=session["user_id"])
-            return render_template("index.html")
+            db.execute("UPDATE users SET hash=:password WHERE user_id=:user_id",
+                       password=generate_password_hash(newpassword), user_id=session["user_id"])
+            flash("Your password was changed", "success")
+            return redirect("/profile")
+
     else:
         return render_template("password.html")
 
