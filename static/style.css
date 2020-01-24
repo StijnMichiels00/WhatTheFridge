@@ -1,6 +1,6 @@
 
 .jumbotron {
-    background-color:rgba(0, 0, 0, 0.4);
+    background-color:rgba(0, 0, 0, 0.6);
     color:white;
 }
 
@@ -68,6 +68,12 @@
 
 .register {
   background-image: url("register.jpg");
+  background-repeat: no-repeat;
+  background-size :cover;
+}
+
+.results {
+  background-image: url("search.jpg");
   background-repeat: no-repeat;
   background-size :cover;
 }
@@ -154,4 +160,21 @@
 
 .form-control-plaintext::placeholder {
   color:lightgray;
+}
+
+.favorite a:hover {
+  color:white;
+}
+
+.favorite a {
+  color:white;
+}
+
+.results a {
+  color:white;
+}
+
+
+.results a:hover {
+  color:white;
 }
