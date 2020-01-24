@@ -222,10 +222,7 @@ def profile():
     else:
          # Retrieve username from database
         username = db.execute("SELECT username FROM users WHERE user_id=:user_id", user_id=session["user_id"])[0]["username"]
-        check = db.execute("SELECT exclusions FROM users WHERE user_id=:user_id", user_id=session["user_id"])[0]["exclusions"]
-        print(check)
-        print("--------------------------------------------------------------------------")
-        print(check.split(" "))
+        check = db.execute("SELECT exclusions FROM users WHERE user_id=:user_id", user_id=session["user_id"])[0]["exclusions"].split(" ")
         # Create lists for checkboxes
         box_gluten_free = ""
         box_vegetarian = ""
