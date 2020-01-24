@@ -246,6 +246,8 @@ def profile():
 
             return render_template("profile.html", username=username, box_gluten_free=box_gluten_free, box_vegetarian=box_vegetarian, box_vegan=box_vegan)
 
+        return render_template("profile.html", username=username, box_gluten_free=box_gluten_free, box_vegetarian=box_vegetarian, box_vegan=box_vegan)
+
 
 @app.route("/addfavorite", methods=["GET"])
 @login_required
