@@ -2,7 +2,7 @@
 ## Studenten
 **Jesse Kassai** - 12814083
 
-**Rico Lücken** - TODO
+**Rico Lücken** - 12870692
 
 **Stijn Michiels** - 12716979
 
@@ -13,9 +13,7 @@
 Met behulp van onze applicatie kan je recepten vinden met ingrediënten die je in huis hebt. De ontbrekende ingrediënten worden getoond als lijst. Je kan de resultaten filteren op vlees, vis en groentes. Je kan ook je favoriete recepten opslaan en delen met een andere gebruiken. Zo bespaart men geld en gaan we voedselverspilling tegen. Je kan de resultaten sorteren op bereidingstijd, prijsklasse en aantal extra benodigde ingrediënten. Deze applicatie is voornamelijk bedoeld voor studenten en helpt voedselverspilling tegen te gaan.
 ## Features
 - **Vind een recept op basis van ingrediënten (automatisch aanvullen bij zoeken ingredient)**
-- Stel (eventueel) een boodschappenlijst op met de ontbrekende ingrediënten
-- Knop om boodschappen toe te voegen aan Albert Heijn-lijst.
-- Filter resultaten op groente, vlees en vis
+- Filter resultaten op vegetarisch, veganistisch en/of glutenvrij.
 - **Sla je favoriete recepten op**
 - **Deel recepten op sociale media**
 - **Sorteren op bereidingstijd, prijsklasse en aantal extra benodigde ingrediënten**
@@ -31,10 +29,12 @@ AH API: [https://www.ah.nl/partnerprogramma](https://slack-redir.net/link?url=ht
 - Javascript (+JQuery)
 - GitHub
 - Code Editing Software met Git-support
+
 ### Concurrentie
 - Receptenzoeker.com
 - Smulweb
 - AH Recepten
+
 ### Uitdagingen
 API-integraties, filteren, sharing, zoekresultaten verwerken (sorteren?)
 
@@ -66,6 +66,14 @@ _Default is authentication required_
 - Flask - [Docs](http://flask.palletsprojects.com/en/1.1.x/)
 - Jinja - [Docs](https://jinja.palletsprojects.com/en/2.10.x/)
 - JQuery (+ JS) - [Docs](https://api.jquery.com/)
+
+## Repository Guide
+Static: bevat afbeeldingen, style en Javascript-bestanden
+
+Templates: bevat HTML-bestanden 
+
+Hoofd-map: bevat application.py en helpers.py (core-bestanden) (& README.md)
+
 
 ## ERD
 ![ERD](docs/ERD-WhatTheFridge2.png)
