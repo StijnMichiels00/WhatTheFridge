@@ -1,42 +1,89 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Profile
+    Support
 {% endblock %}
 {% block class %}support{% endblock %}
 {% block main %}
     <div class="jumbotron">
-
         <h1 class="display-4">Support</h1>
         <p class="lead">We'll get you back cooking in no-time!</p>
-
-        <hr>
-
+<hr>
         <h2>Frequently Asked Questions</h2>
-        <p><strong>Question:</strong> How can I find recipes?
-        <br><strong>Answer:</strong> Find recipes by entering ingredients you'd like to search with on the search page.
+<br>
+<div class="accordion" id="accordionQuestions">
 
-        <p><strong>Question:</strong> How can I filter out meat or fish?
-        <br><strong>Answer:</strong> No worries about that! We're happy to help you find recipes which fit into your diet. Just head to your profile and select your preferences.</p>
+  <div class="card bg-dark">
+    <div class="card-header" id="headingOne">
+      <h2 class="mb-0">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          How can I find recipes?
+        </button>
+      </h2>
+    </div>
+    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionQuestions">
+      <div class="card-body">
+Find recipes by entering ingredients you'd like to search with on the search page.</div>
+    </div>
+  </div>
 
-        <p><strong>Question:</strong> Can I share my favorite recipes?
-        <br><strong>Answer:</strong> You can share your favorites by opening your recipes and choose one of the share-buttons on top of the page to share the recipe on Twitter or Facebook.</p>
+  <div class="card bg-dark">
+    <div class="card-header" id="headingTwo">
+      <h2 class="mb-0">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          How can I select my preferences?
+        </button>
+      </h2>
+    </div>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionQuestions">
+      <div class="card-body">
+No worries about that! We're happy to help you find recipes which fit into your diet. Just head to your profile and select your preferences.
+</div>
+    </div>
+  </div>
 
-        <p><strong>Question:</strong> I'm trying to access a page but I'm getting an error message? What can I do?
-        <br><strong>Answer:</strong> Hmm, that doesn't sound right. Best thing to do here is get in touch with us with the button below. Be sure to let us know what you were trying to do and what error message you got.</p>
+  <div class="card bg-dark">
+    <div class="card-header" id="headingThree">
+      <h2 class="mb-0">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          I'm trying to access a page but I'm getting an error message? What can I do?
+        </button>
+      </h2>
+    </div>
+    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionQuestions">
+      <div class="card-body">
+        Hmm, that doesn't sound right. Best thing to do here is get in touch with us with the button below. Be sure to let us know what you were trying to do and what error message you got.
+      </div>
+    </div>
+  </div>
 
-        <hr>
+    <div class="card bg-dark">
+    <div class="card-header" id="headingThree">
+      <h2 class="mb-0">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+          Can I share recipes with my friends or family?
+        </button>
+      </h2>
+    </div>
+    <div id="collapseFour" class="collapse" aria-labelledby="questionfour" data-parent="#accordionQuestions">
+      <div class="card-body">
+You can share your favourite recipes on social media! Just tap the Share-button to share a link on Facebook/Twitter.
+      </div>
+    </div>
+  </div>
 
+</div>
+
+
+<hr>
         <form action="mailto:info@whatthefridge.com" method="post">
-
             {% if username %}
             <input style="display:none" name="Username" value="{{ username }}" type="text">
                     <p>Your username is: <strong>{{username}}</strong></p>
             {% endif %}
-
             {% if request.args.get('code') %}
             <input style="display:none" name="Errorcode" value="{{ request.args.get('code') }}" type="text">
-            <p>Recent error code: <strong>{{request.args.get('code')}}</strong></p>
+                    <p>Recent error code: <strong>{{request.args.get('code')}}</strong></p>
             {% endif %}
 
             <button class="btn btn-info" type="submit">I still need help</button>
