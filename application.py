@@ -219,7 +219,7 @@ def results():
         flash("We couldn't find any results.", "error")
         return redirect("/search")
     # return results page
-    return render_template("results.html", recipes=recipes_result, ingredients=recipes_info[1], recipe_count=len(recipes_result), extra_info=recipes_result_extra)
+    return render_template("results.html", recipes=recipes_result, ingredients=recipes_info[1], recipe_count=len(recipes_result), extra_info=recipes_result_extra, diets=diets)
 
 
 @app.route("/profile", methods=["GET", "POST"])
