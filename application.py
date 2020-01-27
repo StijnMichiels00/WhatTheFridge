@@ -213,7 +213,7 @@ def results():
 
         # Error when results are empty (API limit reached (probably))
         if recipes_info == None:
-            flash("Something went wrong. Get in touch with us for more information (402).", "error")
+            flash("Something went wrong. Get in touch with us for more information.", "error")
             return redirect("/search")
         # Error when no results could be found
         if len(recipes_info[0]) == 0:
