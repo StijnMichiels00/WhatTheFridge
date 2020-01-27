@@ -4,7 +4,7 @@ import os
 from flask import redirect, render_template, request, session
 from functools import wraps
 
-api_key="679d12481f9e48e7bf7354e3b13dcaf2"
+api_key="c4216333d5594c308a89694c7109bf05"
 def login_required(f):
     """
     Decorate routes to require login.
@@ -32,7 +32,7 @@ def errorhandle(message, code=400):
     return render_template("error.html", code=code, message=escape(message)), code
 
 
-def lookup(ingredients,ranking):
+def lookup(ingredients,ranking,number):
     """
     Lookup recipes by ingredients
 
@@ -42,7 +42,7 @@ def lookup(ingredients,ranking):
     ingredients = ','.join(ingredients_string)
 
     try:
-        response = requests.get(f"https://api.spoonacular.com/recipes/findByIngredients?ingredients={(ingredients)}&ranking={ranking}&number=10&apiKey={api_key}")
+        response = requests.get(f"https://api.spoonacular.com/recipes/findByIngredients?ingredients={(ingredients)}&ranking={ranking}&number={number}&apiKey={api_key}")
         response.raise_for_status()
     except requests.RequestException:
         return None
@@ -97,4 +97,10 @@ def lookup_bulk(ids):
 
     except (KeyError, TypeError, ValueError):
         return None
+
+def get_extra_info(recipes_info):
+    ids = []
+    for recipe in recipes_info[0]:
+        ids.append(recipe['id'])
+    return lookup_bulk(ids)
 
