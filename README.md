@@ -1,4 +1,12 @@
 # WhatTheFridge
+## Studenten
+**Jesse Kassai** - 12814083
+
+**Rico Lücken** - TODO
+
+**Stijn Michiels** - 12716979
+
+**Huib Wolse** - 12665142
 
 # Projectplan
 ## Samenvatting
@@ -43,9 +51,9 @@ API-integraties, filteren, sharing, zoekresultaten verwerken (sorteren?)
 
 _Default is authentication required_
 
-## Views
+## Screenshot
+![Screenshot](docs/image.png)
 
-Zie prototype op Invision voor schetsen: [open](https://whatthefridge.invisionapp.com/public/share/C4Y2UJFW5)
 
 ## Models/helpers
 - login_required - herleid gebruiker naar login pagina als authenticatie vereist is
@@ -60,7 +68,8 @@ Zie prototype op Invision voor schetsen: [open](https://whatthefridge.invisionap
 - JQuery (+ JS) - [Docs](https://api.jquery.com/)
 
 ## ERD
-![ERD](https://github.com/StijnMichiels00/WhatTheFridge/blob/master/ERD-WhatTheFridge2.png)
+![ERD](docs/ERD-WhatTheFridge2.png)
+
 In deze database structure zijn twee tabellen te zien. In de bovenste tabel worden
 gebruikers geregistreerd door middel van een user id, username, een gehasd wachtwoord
 en een exclusion voor een bepaald dieet (dit kan later worden aangepast bij de profielpagina).
