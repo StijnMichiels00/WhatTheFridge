@@ -4,11 +4,8 @@ import os
 from flask import redirect, render_template, request, session
 from functools import wraps
 
-<<<<<<< HEAD
-api_key="0607dde492cb40619d32065090c6740a"
-=======
 api_key="c68807a59a4f4601b7387e05cf1350a2"
->>>>>>> 7d7956e6a5db79c6807af7dfba35a232053c6896
+
 def login_required(f):
     """
     Decorate routes to require login.
