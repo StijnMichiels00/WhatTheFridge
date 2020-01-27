@@ -176,7 +176,6 @@ def results():
                 recipes_result.append(recipes_info[0][i])
                 recipes_result_extra.append(recipes_extra_info[i])
                 recipe_count += 1
-        return render_template("results.html", recipes=recipes_result, ingredients=recipes_info[1], recipe_count=len(recipes_result), extra_info=recipes_result_extra)
 
     elif len(diets) == 2:
         recipes_info = lookup(ingredients, ranking=1, number=10)
@@ -189,7 +188,6 @@ def results():
                 recipes_result.append(recipes_info[0][i])
                 recipes_result_extra.append(recipes_extra_info[i])
                 recipe_count += 1
-        return render_template("results.html", recipes=recipes_result, ingredients=recipes_info[1], recipe_count=len(recipes_result), extra_info=recipes_result_extra)
 
     elif len(diets) == 3:
         recipes_info = lookup(ingredients, ranking=1, number=10)
@@ -202,25 +200,25 @@ def results():
                 recipes_result.append(recipes_info[0][i])
                 recipes_result_extra.append(recipes_extra_info[i])
                 recipe_count += 1
-        return render_template("results.html", recipes=recipes_result, ingredients=recipes_info[1], recipe_count=len(recipes_result), extra_info=recipes_result_extra)
 
     else:
         # Lookup
-        recipes_info = lookup(ingredients,ranking=1,number=1)
+        recipes_info = lookup(ingredients,ranking=1,number=10)
+        recipes_result = recipes_info[0]
 
         # Lookup extra info
-        recipes_extra_info = get_extra_info(recipes_info)
+        recipes_result_extra = get_extra_info(recipes_info)
 
-        # Error when results are empty (API limit reached (probably))
-        if recipes_info == None:
-            flash("Something went wrong. Get in touch with us for more information (402).", "error")
-            return redirect("/search")
-        # Error when no results could be found
-        if len(recipes_info[0]) == 0:
-            flash("We couldn't find any results.", "error")
-            return redirect("/search")
-        # return results page
-        return render_template("results.html", recipes=recipes_info[0], ingredients=recipes_info[1], recipe_count=len(recipes_info[0]), extra_info=recipes_extra_info)
+    # Error when results are empty (API limit reached (probably))
+    if recipes_info == None:
+        flash("Something went wrong. Get in touch with us for more information (402).", "error")
+        return redirect("/search")
+    # Error when no results could be found
+    if len(recipes_result) == 0:
+        flash("We couldn't find any results.", "error")
+        return redirect("/search")
+    # return results page
+    return render_template("results.html", recipes=recipes_result, ingredients=recipes_info[1], recipe_count=len(recipes_result), extra_info=recipes_result_extra)
 
 
 @app.route("/profile", methods=["GET", "POST"])
