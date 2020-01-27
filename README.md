@@ -78,8 +78,9 @@ Hoofd-map: bevat application.py en helpers.py (core-bestanden) (& README.md)
 ## ERD
 ![ERD](docs/ERD-WhatTheFridge2.png)
 
-In deze database structure zijn twee tabellen te zien. In de bovenste tabel worden
-gebruikers geregistreerd door middel van een user id, username, een gehasd wachtwoord
-en een exclusion voor een bepaald dieet (dit kan later worden aangepast bij de profielpagina).
-In de onderste tabel worden recepten opgeslagen. Verschillende gebruikers kunnen meerdere
-gerechten opslaan per gebruiker. Vandaar de aanwezigheid van een many to many verband.
+In deze ERD-diagram zijn twee tabellen te zien. In de bovenste tabel worden
+gebruikers geregistreerd door middel van een UserID, een username, een gehashed wachtwoord
+en hun voorkeuren voor een specifiek dieet.
+
+In de onderste tabel worden de recepten die de gebruiker wilt opslaan, opgeslagen. Verschillende gebruikers kunnen meerdere
+gerechten opslaan per gebruiker. Vandaar de keuze voor een many-to-many verband.
