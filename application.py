@@ -156,11 +156,12 @@ def support():
 @app.route("/results", methods=["POST"])
 @login_required
 def results():
+    # Get information from database and from search
     ingredients = request.form.get("itemlist")
     ranking = request.form.get("ranking")
     diets = db.execute("SELECT diets FROM users WHERE user_id=:user_id", user_id=session["user_id"])[0]["diets"].split(",")
-    print(diets)
 
+    # Raise error when no ingredients are chosen
     if not ingredients:
         flash("Provide at least one ingredient.", "warning")
         return redirect("/search")
@@ -228,6 +229,7 @@ def results():
 def profile():
 
     if request.method == "POST":
+        # Get preferences from checkboxes
         glutenFree = request.form.get("glutenFree")
         vegetarian = request.form.get("vegetarian")
         vegan = request.form.get("vegan")
@@ -253,6 +255,7 @@ def profile():
         if vegan == "vegan":
             preferences = preferences + ",vegan"
 
+        # If nothing is selected, add NULL to preferences
         if not glutenFree and not vegetarian and not vegan:
             preferences = ",NULL"
 
@@ -310,14 +313,15 @@ def addfavorite():
 @app.route("/favorites", methods=["GET", "POST"])
 @login_required
 def favorites():
-
+    # Get saved recipes from database
     saved_recipes = db.execute("SELECT * FROM saved WHERE user_id=:user_id", user_id=session["user_id"])
     ids = []
     timestamp = dict()
+
+    # Putting recipes in list and make dictionairy with recipe and timestamp
     for recipe in saved_recipes:
         ids.append(recipe['recipe'])
         timestamp[recipe['recipe']] = recipe['timestamp']
-        pass
 
     else:
         saved_recipes = db.execute("SELECT * FROM saved WHERE user_id=:user_id", user_id=session["user_id"])
@@ -327,6 +331,7 @@ def favorites():
         for recipe in saved_recipes:
             ids.append(recipe['recipe'])
             timestamp[recipe['recipe']] = recipe['timestamp']
+        # If database is empty raise an error
         if None in ids:
             errorhandle("DBCorruptfor", 400)
         info_recipes = lookup_bulk(ids)
