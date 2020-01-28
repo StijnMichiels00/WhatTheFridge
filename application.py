@@ -219,7 +219,7 @@ def results():
         flash("We couldn't find any results.", "error")
         return redirect("/search")
     # return results page
-    return render_template("results.html", recipes=recipes_result, ingredients=recipes_info[1], recipe_count=len(recipes_result), extra_info=recipes_result_extra)
+    return render_template("results.html", recipes=recipes_result, ingredients=recipes_info[1], recipe_count=len(recipes_result), extra_info=recipes_result_extra, diets=diets)
 
 
 @app.route("/profile", methods=["GET", "POST"])
@@ -311,28 +311,7 @@ def addfavorite():
 @app.route("/favorites", methods=["GET", "POST"])
 @login_required
 def favorites():
-    # Get saved recipes from database
-    saved_recipes = db.execute("SELECT * FROM saved WHERE user_id=:user_id", user_id=session["user_id"])
-    ids = []
-    timestamp = dict()
 
-    # Putting recipes in list and make dictionairy with recipe and timestamp
-    for recipe in saved_recipes:
-        ids.append(recipe['recipe'])
-        timestamp[recipe['recipe']] = recipe['timestamp']
-
-    else:
-        saved_recipes = db.execute("SELECT * FROM saved WHERE user_id=:user_id", user_id=session["user_id"])
-
-        ids = []
-        timestamp = dict()
-        for recipe in saved_recipes:
-            ids.append(recipe['recipe'])
-            timestamp[recipe['recipe']] = recipe['timestamp']
-        # If database is empty raise an error
-        if None in ids:
-            errorhandle("DBCorruptfor", 400)
-        info_recipes = lookup_bulk(ids)
 
     # When delete button is clicked
     if request.method == "POST":
@@ -341,6 +320,21 @@ def favorites():
         return redirect("/favorites")
 
     else:
+         # Get saved recipes from database
+        saved_recipes = db.execute("SELECT * FROM saved WHERE user_id=:user_id", user_id=session["user_id"])
+        ids = []
+        timestamp = dict()
+
+        for recipe in saved_recipes:
+            ids.append(recipe['recipe'])
+            timestamp[recipe['recipe']] = recipe['timestamp']
+
+        # If database is empty raise an error
+        if None in ids:
+            errorhandle("DBCorruptfor", 400)
+
+        info_recipes = lookup_bulk(ids)
+
         return render_template("favorite.html", info_recipes=info_recipes, timestamp=timestamp)
 
 

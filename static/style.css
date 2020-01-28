@@ -178,3 +178,26 @@
 .results a:hover {
   color:white;
 }
+
+.card-header button {
+  color:white;
+}
+
+.card-header button:hover {
+  color:white;
+}
+
+.card-header button::before {
+  font-family: "FontAwesome";
+  content:'\f078';
+}
+
+.card-header .collapsed::before {
+  font-family: "FontAwesome";
+  content:'\f054';
+}
+
+
+.card-body {
+  padding-left:2rem;
+}

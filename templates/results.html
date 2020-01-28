@@ -9,7 +9,7 @@
 <script src="/static/sorttable.js"></script>
 <div class="jumbotron" class="width:60%">
 <h1 class="display-4">Get cooking!</h1>
-<p class="lead">We've found these recipes with: <strong>{{ ingredients.capitalize().replace(",",", ") }}</strong></p>
+<p class="lead">We've found these {% for diet in diets %}<strong>{{diet.lower()}}{{ "," if not loop.last }} </strong>{%endfor%} recipes with: <strong>{{ ingredients.capitalize().replace(",",", ") }}</strong> </p>
 <a href="/search?ingredients={{ ingredients }}"><button class="btn btn-primary"><i class="fas fa-edit"></i> Edit ingredients</button></a><br><br>
 
 
