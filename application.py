@@ -167,7 +167,7 @@ def results():
         return redirect("/search")
 
     if len(diets) == 1 and 'NULL' not in diets:
-        recipes_info = lookup(ingredients, ranking=1, number=10)
+        recipes_info = lookup(ingredients, ranking=1, number=15)
         recipes_extra_info = get_extra_info(recipes_info)
         recipes_result = []
         recipes_result_extra = []
@@ -179,7 +179,7 @@ def results():
                 recipe_count += 1
 
     elif len(diets) == 2:
-        recipes_info = lookup(ingredients, ranking=1, number=10)
+        recipes_info = lookup(ingredients, ranking=1, number=20)
         recipes_extra_info = get_extra_info(recipes_info)
         recipes_result = []
         recipes_result_extra = []
@@ -191,7 +191,7 @@ def results():
                 recipe_count += 1
 
     elif len(diets) == 3:
-        recipes_info = lookup(ingredients, ranking=1, number=10)
+        recipes_info = lookup(ingredients, ranking=1, number=20)
         recipes_extra_info = get_extra_info(recipes_info)
         recipes_result = []
         recipes_result_extra = []
@@ -204,7 +204,7 @@ def results():
 
     else:
         # Lookup
-        recipes_info = lookup(ingredients, ranking=1, number=10)
+        recipes_info = lookup(ingredients, ranking)
         recipes_result = recipes_info[0]
 
         # Lookup extra info

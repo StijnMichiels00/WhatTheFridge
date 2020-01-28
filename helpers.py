@@ -35,7 +35,7 @@ def errorhandle(message, code=400):
     return render_template("error.html", code=code, message=escape(message)), code
 
 
-def lookup(ingredients, ranking, number):
+def lookup(ingredients, ranking=1, number=10):
     """
     Lookup recipes by ingredients
 
