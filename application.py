@@ -159,6 +159,8 @@ def results():
     # Get information from database and from search
     ingredients = request.form.get("itemlist")
     ranking = request.form.get("ranking")
+    if ranking is None:
+        ranking = 1
     diets = db.execute("SELECT diets FROM users WHERE user_id=:user_id", user_id=session["user_id"])[0]["diets"].split(",")
 
     # Raise error when no ingredients are chosen
@@ -173,7 +175,7 @@ def results():
         recipes_result_extra = []
         recipe_count = 0
         for i in range(len(recipes_info[0])):
-            if recipes_extra_info[i][diets[0]] == True and recipe_count < 11:
+            if recipes_extra_info[i][diets[0]] == True and recipe_count < 10:
                 recipes_result.append(recipes_info[0][i])
                 recipes_result_extra.append(recipes_extra_info[i])
                 recipe_count += 1
@@ -185,7 +187,7 @@ def results():
         recipes_result_extra = []
         recipe_count = 0
         for i in range(len(recipes_info[0])):
-            if recipes_extra_info[i][diets[0]] == True and recipes_extra_info[i][diets[1]] == True and recipe_count < 11:
+            if recipes_extra_info[i][diets[0]] == True and recipes_extra_info[i][diets[1]] == True and recipe_count < 10:
                 recipes_result.append(recipes_info[0][i])
                 recipes_result_extra.append(recipes_extra_info[i])
                 recipe_count += 1
@@ -197,7 +199,7 @@ def results():
         recipes_result_extra = []
         recipe_count = 0
         for i in range(len(recipes_info[0])):
-            if recipes_extra_info[i]['vegan'] == True and recipes_extra_info[i]['glutenFree'] == True and recipe_count < 11:
+            if recipes_extra_info[i]['vegan'] == True and recipes_extra_info[i]['glutenFree'] == True and recipe_count < 10:
                 recipes_result.append(recipes_info[0][i])
                 recipes_result_extra.append(recipes_extra_info[i])
                 recipe_count += 1

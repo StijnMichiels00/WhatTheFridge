@@ -5,7 +5,10 @@ from flask import redirect, render_template, jsonify, request, session, make_res
 from functools import wraps
 import json
 
-api_key = "59757b939d834ee0aa5a09827389b5f6"
+api_key = "09fe7b8ca2d84dc2aa231c91a507b5c1"
+
+# api_key="c68807a59a4f4601b7387e05cf1350a2"
+
 
 def login_required(f):
     """
@@ -34,19 +37,20 @@ def errorhandle(message, code=400):
     return render_template("error.html", code=code, message=escape(message)), code
 
 
-def lookup(ingredients, ranking, number=10):
+def lookup(ingredients, ranking=1, number=10):
     """
     Lookup recipes by ingredients
 
     https://spoonacular.com/food-api/docs#Search-Recipes-by-Ingredients
     """
+
     ingredients_string = ingredients.splitlines()
     ingredients = ','.join(ingredients_string)
     try:
         with open('static/results.json', 'r') as cachefile:
             data = json.load(cachefile)
-            if data[ingredients + "," + str(ranking)]:
-                return (data[ingredients + "," + str(ranking)], ingredients)
+            if data[ingredients]:
+                return (data[ingredients], ingredients)
 
     except (KeyError):
         try:
@@ -54,7 +58,7 @@ def lookup(ingredients, ranking, number=10):
                 f"https://api.spoonacular.com/recipes/findByIngredients?ingredients={(ingredients)}&ranking={ranking}&number={number}&apiKey={api_key}")
             response.raise_for_status()
             cache = dict()
-            cache[ingredients + "," + str(ranking)] = response.json()
+            cache[ingredients, ranking] = response.json()
             with open('static/results.json', 'r+') as cachefile:
                 old_dict = json.load(cachefile)
                 old_dict.update(cache)
