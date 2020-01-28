@@ -204,7 +204,7 @@ def results():
 
     else:
         # Lookup
-        recipes_info = lookup(ingredients,ranking=1,number=10)
+        recipes_info = lookup(ingredients, ranking=1, number=10)
         recipes_result = recipes_info[0]
 
         # Lookup extra info
@@ -261,7 +261,7 @@ def profile():
         preferences = preferences[1:]
 
         db.execute("UPDATE users SET diets=:preferences WHERE user_id=:user_id",
-                    preferences=preferences, user_id=session["user_id"])
+                   preferences=preferences, user_id=session["user_id"])
 
         return redirect("/profile")
 
@@ -312,7 +312,6 @@ def addfavorite():
 @login_required
 def favorites():
 
-
     # When delete button is clicked
     if request.method == "POST":
         delete = (request.form.get("delete"))
@@ -320,7 +319,7 @@ def favorites():
         return redirect("/favorites")
 
     else:
-         # Get saved recipes from database
+        # Get saved recipes from database
         saved_recipes = db.execute("SELECT * FROM saved WHERE user_id=:user_id", user_id=session["user_id"])
         ids = []
         timestamp = dict()

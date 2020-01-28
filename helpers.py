@@ -5,7 +5,8 @@ from flask import redirect, render_template, jsonify, request, session, make_res
 from functools import wraps
 import json
 
-api_key="09fe7b8ca2d84dc2aa231c91a507b5c1"
+api_key = "09fe7b8ca2d84dc2aa231c91a507b5c1"
+
 
 def login_required(f):
     """
@@ -34,8 +35,7 @@ def errorhandle(message, code=400):
     return render_template("error.html", code=code, message=escape(message)), code
 
 
-def lookup(ingredients,ranking,number):
-
+def lookup(ingredients, ranking, number):
     """
     Lookup recipes by ingredients
 
@@ -45,25 +45,24 @@ def lookup(ingredients,ranking,number):
     ingredients_string = ingredients.splitlines()
     ingredients = ','.join(ingredients_string)
     try:
-        with open('static/results.json','r') as cachefile:
-            data=json.load(cachefile)
+        with open('static/results.json', 'r') as cachefile:
+            data = json.load(cachefile)
             if data[ingredients]:
-                print("cache used ______________________________________________________________________")
                 return (data[ingredients], ingredients)
 
     except (KeyError):
         try:
-            response = requests.get(f"https://api.spoonacular.com/recipes/findByIngredients?ingredients={(ingredients)}&ranking={ranking}&number={number}&apiKey={api_key}")
+            response = requests.get(
+                f"https://api.spoonacular.com/recipes/findByIngredients?ingredients={(ingredients)}&ranking={ranking}&number={number}&apiKey={api_key}")
             response.raise_for_status()
             cache = dict()
             cache[ingredients] = response.json()
-            with open('static/results.json','r+') as cachefile:
+            with open('static/results.json', 'r+') as cachefile:
                 old_dict = json.load(cachefile)
                 old_dict.update(cache)
                 cachefile.seek(0)
                 cachefile.write(json.dumps(old_dict))
                 cachefile.truncate()
-
 
         except requests.RequestException:
             return None
@@ -75,6 +74,7 @@ def lookup(ingredients,ranking,number):
 
         except (KeyError, TypeError, ValueError):
             return None
+
 
 def lookup_recipe(id, ranking=1):
     """
@@ -96,6 +96,7 @@ def lookup_recipe(id, ranking=1):
     except (KeyError, TypeError, ValueError):
         return None
 
+
 def lookup_bulk(ids):
     """
     Bulk lookup recipes by id
@@ -106,10 +107,9 @@ def lookup_bulk(ids):
     ids_list = [str(i) for i in ids]
     ids_string = ",".join(ids_list)
     try:
-        with open('static/results_extra.json','r') as cachefile:
-            data=json.load(cachefile)
+        with open('static/results_extra.json', 'r') as cachefile:
+            data = json.load(cachefile)
             if data[ids_string] is not "KeyError":
-                print("cache extra used ______________________________________________________________________")
                 return (data[ids_string])
     except(KeyError):
         try:
@@ -117,7 +117,7 @@ def lookup_bulk(ids):
             response.raise_for_status()
             cache = dict()
             cache[ids_string] = response.json()
-            with open('static/results_extra.json','r+') as cachefile:
+            with open('static/results_extra.json', 'r+') as cachefile:
                 old_dict = json.load(cachefile)
                 old_dict.update(cache)
                 cachefile.seek(0)
@@ -135,6 +135,7 @@ def lookup_bulk(ids):
 
         except (KeyError, TypeError, ValueError):
             return None
+
 
 def get_extra_info(recipes_info):
     ids = []
