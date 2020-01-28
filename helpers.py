@@ -7,6 +7,8 @@ import json
 
 api_key = "09fe7b8ca2d84dc2aa231c91a507b5c1"
 
+# api_key="c68807a59a4f4601b7387e05cf1350a2"
+
 
 def login_required(f):
     """
