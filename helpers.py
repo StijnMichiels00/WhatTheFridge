@@ -1,10 +1,11 @@
 import requests
 import urllib.parse
 import os
-from flask import redirect, render_template, request, session
+from flask import redirect, render_template, jsonify, request, session, make_response
 from functools import wraps
+import json
 
-api_key="c68807a59a4f4601b7387e05cf1350a2"
+api_key="09fe7b8ca2d84dc2aa231c91a507b5c1"
 
 def login_required(f):
     """
@@ -34,27 +35,46 @@ def errorhandle(message, code=400):
 
 
 def lookup(ingredients,ranking,number):
+
     """
     Lookup recipes by ingredients
 
     https://spoonacular.com/food-api/docs#Search-Recipes-by-Ingredients
     """
+
     ingredients_string = ingredients.splitlines()
     ingredients = ','.join(ingredients_string)
-
     try:
-        response = requests.get(f"https://api.spoonacular.com/recipes/findByIngredients?ingredients={(ingredients)}&ranking={ranking}&number={number}&apiKey={api_key}")
-        response.raise_for_status()
-    except requests.RequestException:
-        return None
+        with open('static/results.json','r') as cachefile:
+            data=json.load(cachefile)
+            if data[ingredients]:
+                print("cache used ______________________________________________________________________")
+                return (data[ingredients], ingredients)
 
-    # Parse response
-    try:
-        recipes = response.json()
-        return recipes, ingredients
+    except (KeyError):
+        try:
+            response = requests.get(f"https://api.spoonacular.com/recipes/findByIngredients?ingredients={(ingredients)}&ranking={ranking}&number={number}&apiKey={api_key}")
+            response.raise_for_status()
+            cache = dict()
+            cache[ingredients] = response.json()
+            with open('static/results.json','r+') as cachefile:
+                old_dict = json.load(cachefile)
+                old_dict.update(cache)
+                cachefile.seek(0)
+                cachefile.write(json.dumps(old_dict))
+                cachefile.truncate()
 
-    except (KeyError, TypeError, ValueError):
-        return None
+
+        except requests.RequestException:
+            return None
+
+        # Parse response
+        try:
+            recipes = response.json()
+            return recipes, ingredients
+
+        except (KeyError, TypeError, ValueError):
+            return None
 
 def lookup_recipe(id, ranking=1):
     """
@@ -82,22 +102,39 @@ def lookup_bulk(ids):
 
     https://spoonacular.com/food-api/docs#Get-Recipe-Information-Bulk
     """
+
     ids_list = [str(i) for i in ids]
     ids_string = ",".join(ids_list)
-
     try:
-        response = requests.get(f"https://api.spoonacular.com/recipes/informationBulk?ids={ids_string}&apiKey={api_key}")
-        response.raise_for_status()
-    except requests.RequestException:
-        return None
+        with open('static/results_extra.json','r') as cachefile:
+            data=json.load(cachefile)
+            if data[ids_string] is not "KeyError":
+                print("cache extra used ______________________________________________________________________")
+                return (data[ids_string])
+    except(KeyError):
+        try:
+            response = requests.get(f"https://api.spoonacular.com/recipes/informationBulk?ids={ids_string}&apiKey={api_key}")
+            response.raise_for_status()
+            cache = dict()
+            cache[ids_string] = response.json()
+            with open('static/results_extra.json','r+') as cachefile:
+                old_dict = json.load(cachefile)
+                old_dict.update(cache)
+                cachefile.seek(0)
+                cachefile.write(json.dumps(old_dict))
+                cachefile.truncate()
 
-    # Parse response
-    try:
-        recipesinfo = response.json()
-        return recipesinfo
+        except requests.RequestException:
+            return None
 
-    except (KeyError, TypeError, ValueError):
-        return None
+        # Parse response
+        try:
+
+            recipesinfo = response.json()
+            return recipesinfo
+
+        except (KeyError, TypeError, ValueError):
+            return None
 
 def get_extra_info(recipes_info):
     ids = []
