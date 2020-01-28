@@ -8,7 +8,7 @@ from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import login_required, errorhandle, lookup, lookup_recipe, lookup_bulk
+from helpers import login_required, errorhandle, lookup, lookup_recipe, lookup_bulk, get_extra_info
 
 # Configure application
 app = Flask(__name__)
@@ -149,40 +149,77 @@ def support():
         return render_template("support.html")
     else:
         # Get personalised support page when user is logged in
-        username = db.execute("SELECT username FROM users WHERE user_id=:id", id=session["user_id"])[0]["username"]
+        username = db.execute("SELECT username FROM users WHERE user_id=:user_id", user_id=session["user_id"])[0]["username"]
         return render_template("support.html", username=username)
 
 
 @app.route("/results", methods=["POST"])
 @login_required
 def results():
+    # Get information from database and from search
     ingredients = request.form.get("itemlist")
     ranking = request.form.get("ranking")
+    diets = db.execute("SELECT diets FROM users WHERE user_id=:user_id", user_id=session["user_id"])[0]["diets"].split(",")
+
+    # Raise error when no ingredients are chosen
     if not ingredients:
         flash("Provide at least one ingredient.", "warning")
         return redirect("/search")
 
-    # Lookup
-    recipes_info = lookup(ingredients, ranking=1)
+    if len(diets) == 1 and 'NULL' not in diets:
+        recipes_info = lookup(ingredients, ranking=1, number=10)
+        recipes_extra_info = get_extra_info(recipes_info)
+        recipes_result = []
+        recipes_result_extra = []
+        recipe_count = 0
+        for i in range(len(recipes_info[0])):
+            if recipes_extra_info[i][diets[0]] == True and recipe_count < 11:
+                recipes_result.append(recipes_info[0][i])
+                recipes_result_extra.append(recipes_extra_info[i])
+                recipe_count += 1
 
-    # Lookup extra info
-    # Create string of recipes ids
-    ids = []
-    for recipe in recipes_info[0]:
-        ids.append(recipe['id'])
+    elif len(diets) == 2:
+        recipes_info = lookup(ingredients, ranking=1, number=10)
+        recipes_extra_info = get_extra_info(recipes_info)
+        recipes_result = []
+        recipes_result_extra = []
+        recipe_count = 0
+        for i in range(len(recipes_info[0])):
+            if recipes_extra_info[i][diets[0]] == True and recipes_extra_info[i][diets[1]] == True and recipe_count < 11:
+                recipes_result.append(recipes_info[0][i])
+                recipes_result_extra.append(recipes_extra_info[i])
+                recipe_count += 1
 
-    recipes_extra_info = lookup_bulk(ids)
+    elif len(diets) == 3:
+        recipes_info = lookup(ingredients, ranking=1, number=10)
+        recipes_extra_info = get_extra_info(recipes_info)
+        recipes_result = []
+        recipes_result_extra = []
+        recipe_count = 0
+        for i in range(len(recipes_info[0])):
+            if recipes_extra_info[i]['vegan'] == True and recipes_extra_info[i]['glutenFree'] == True and recipe_count < 11:
+                recipes_result.append(recipes_info[0][i])
+                recipes_result_extra.append(recipes_extra_info[i])
+                recipe_count += 1
+
+    else:
+        # Lookup
+        recipes_info = lookup(ingredients, ranking=1, number=10)
+        recipes_result = recipes_info[0]
+
+        # Lookup extra info
+        recipes_result_extra = get_extra_info(recipes_info)
 
     # Error when results are empty (API limit reached (probably))
     if recipes_info == None:
         flash("Something went wrong. Get in touch with us for more information (402).", "error")
         return redirect("/search")
     # Error when no results could be found
-    if len(recipes_info[0]) == 0:
+    if len(recipes_result) == 0:
         flash("We couldn't find any results.", "error")
         return redirect("/search")
     # return results page
-    return render_template("results.html", recipes=recipes_info[0], ingredients=recipes_info[1], recipe_count=len(recipes_info[0]), extra_info=recipes_extra_info)
+    return render_template("results.html", recipes=recipes_result, ingredients=recipes_info[1], recipe_count=len(recipes_result), extra_info=recipes_result_extra, diets=diets)
 
 
 @app.route("/profile", methods=["GET", "POST"])
@@ -190,7 +227,8 @@ def results():
 def profile():
 
     if request.method == "POST":
-        gluten_free = request.form.get("gluten_free")
+        # Get preferences from checkboxes
+        glutenFree = request.form.get("glutenFree")
         vegetarian = request.form.get("vegetarian")
         vegan = request.form.get("vegan")
         preferences = ""
@@ -204,38 +242,42 @@ def profile():
             return redirect("/")
 
         # If gluten free selected, add gluten free to preferences
-        if gluten_free == "gluten_free":
-            preferences = preferences + " gluten_free"
+        if glutenFree == "glutenFree":
+            preferences = preferences + ",glutenFree"
 
         # If vegetarian selected, add vegetarian to preferences
         if vegetarian == "vegetarian":
-            preferences = preferences + " vegetarian"
+            preferences = preferences + ",vegetarian"
 
         # If vegan selected, add vegan to preferences
         if vegan == "vegan":
-            preferences = preferences + " vegan"
+            preferences = preferences + ",vegan"
 
-        if not gluten_free and not vegetarian and not vegan:
-            preferences = "NULL"
+        # If nothing is selected, add NULL to preferences
+        if not glutenFree and not vegetarian and not vegan:
+            preferences = ",NULL"
 
-        db.execute("UPDATE users SET exclusions=:preferences WHERE user_id=:user_id",
+        # Remove first comma
+        preferences = preferences[1:]
+
+        db.execute("UPDATE users SET diets=:preferences WHERE user_id=:user_id",
                    preferences=preferences, user_id=session["user_id"])
 
         return redirect("/profile")
 
     else:
-         # Retrieve username from database
+        # Retrieve username from database
         username = db.execute("SELECT username FROM users WHERE user_id=:user_id", user_id=session["user_id"])[0]["username"]
-        check = db.execute("SELECT exclusions FROM users WHERE user_id=:user_id", user_id=session["user_id"])[0]["exclusions"]
+        check = db.execute("SELECT diets FROM users WHERE user_id=:user_id", user_id=session["user_id"])[0]["diets"]
         # Create lists for checkboxes
-        box_gluten_free = ""
+        box_glutenFree = ""
         box_vegetarian = ""
         box_vegan = ""
 
         if check:
             # If user selected gluten free, keep gluten free selected
-            if "gluten_free" in check:
-                box_gluten_free = "checked"
+            if "glutenFree" in check:
+                box_glutenFree = "checked"
 
             # If user selected vegetarian, keep vegetarian selected
             if "vegetarian" in check:
@@ -245,9 +287,9 @@ def profile():
             if "vegan" in check:
                 box_vegan = "checked"
 
-            return render_template("profile.html", username=username, box_gluten_free=box_gluten_free, box_vegetarian=box_vegetarian, box_vegan=box_vegan)
+            return render_template("profile.html", username=username, box_glutenFree=box_glutenFree, box_vegetarian=box_vegetarian, box_vegan=box_vegan)
 
-        return render_template("profile.html", username=username, box_gluten_free=box_gluten_free, box_vegetarian=box_vegetarian, box_vegan=box_vegan)
+        return render_template("profile.html", username=username, box_glutenFree=box_glutenFree, box_vegetarian=box_vegetarian, box_vegan=box_vegan)
 
 
 @app.route("/addfavorite", methods=["GET"])
@@ -269,31 +311,29 @@ def addfavorite():
 @app.route("/favorites", methods=["GET", "POST"])
 @login_required
 def favorites():
-    saved_recipes = db.execute("SELECT * FROM saved WHERE user_id=:user_id", user_id=session["user_id"])
-    ids = []
-    timestamp = dict()
-    for recipe in saved_recipes:
-        ids.append(recipe['recipe'])
-        timestamp[recipe['recipe']] = recipe['timestamp']
-        pass
 
-    else:
-        saved_recipes = db.execute("SELECT * FROM saved WHERE user_id=:user_id", user_id=session["user_id"])
-
-        ids = []
-        timestamp = dict()
-        for recipe in saved_recipes:
-            ids.append(recipe['recipe'])
-            timestamp[recipe['recipe']] = recipe['timestamp']
-        if None in ids:
-            errorhandle("DBCorruptfor", 400)
-        info_recipes = lookup_bulk(ids)
-
+    # When delete button is clicked
     if request.method == "POST":
         delete = (request.form.get("delete"))
         db.execute("DELETE FROM saved WHERE recipe=:r", r=delete)
         return redirect("/favorites")
+
     else:
+        # Get saved recipes from database
+        saved_recipes = db.execute("SELECT * FROM saved WHERE user_id=:user_id", user_id=session["user_id"])
+        ids = []
+        timestamp = dict()
+
+        for recipe in saved_recipes:
+            ids.append(recipe['recipe'])
+            timestamp[recipe['recipe']] = recipe['timestamp']
+
+        # If database is empty raise an error
+        if None in ids:
+            errorhandle("DBCorruptfor", 400)
+
+        info_recipes = lookup_bulk(ids)
+
         return render_template("favorite.html", info_recipes=info_recipes, timestamp=timestamp)
 
 

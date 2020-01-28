@@ -1,13 +1,19 @@
 # WhatTheFridge
+## Studenten
+**Jesse Kassai** - 12814083
+
+**Rico Lücken** - 12870692
+
+**Stijn Michiels** - 12716979
+
+**Huib Wolse** - 12665142
 
 # Projectplan
 ## Samenvatting
 Met behulp van onze applicatie kan je recepten vinden met ingrediënten die je in huis hebt. De ontbrekende ingrediënten worden getoond als lijst. Je kan de resultaten filteren op vlees, vis en groentes. Je kan ook je favoriete recepten opslaan en delen met een andere gebruiken. Zo bespaart men geld en gaan we voedselverspilling tegen. Je kan de resultaten sorteren op bereidingstijd, prijsklasse en aantal extra benodigde ingrediënten. Deze applicatie is voornamelijk bedoeld voor studenten en helpt voedselverspilling tegen te gaan.
 ## Features
 - **Vind een recept op basis van ingrediënten (automatisch aanvullen bij zoeken ingredient)**
-- Stel (eventueel) een boodschappenlijst op met de ontbrekende ingrediënten
-- Knop om boodschappen toe te voegen aan Albert Heijn-lijst.
-- Filter resultaten op groente, vlees en vis
+- Filter resultaten op vegetarisch, veganistisch en/of glutenvrij.
 - **Sla je favoriete recepten op**
 - **Deel recepten op sociale media**
 - **Sorteren op bereidingstijd, prijsklasse en aantal extra benodigde ingrediënten**
@@ -23,10 +29,12 @@ AH API: [https://www.ah.nl/partnerprogramma](https://slack-redir.net/link?url=ht
 - Javascript (+JQuery)
 - GitHub
 - Code Editing Software met Git-support
+
 ### Concurrentie
 - Receptenzoeker.com
 - Smulweb
 - AH Recepten
+
 ### Uitdagingen
 API-integraties, filteren, sharing, zoekresultaten verwerken (sorteren?)
 
@@ -43,9 +51,9 @@ API-integraties, filteren, sharing, zoekresultaten verwerken (sorteren?)
 
 _Default is authentication required_
 
-## Views
+## Screenshot
+![Screenshot](docs/image.png)
 
-Zie prototype op Invision voor schetsen: [open](https://whatthefridge.invisionapp.com/public/share/C4Y2UJFW5)
 
 ## Models/helpers
 - login_required - herleid gebruiker naar login pagina als authenticatie vereist is
@@ -59,10 +67,20 @@ Zie prototype op Invision voor schetsen: [open](https://whatthefridge.invisionap
 - Jinja - [Docs](https://jinja.palletsprojects.com/en/2.10.x/)
 - JQuery (+ JS) - [Docs](https://api.jquery.com/)
 
+## Repository Guide
+Static: bevat afbeeldingen, style en Javascript-bestanden
+
+Templates: bevat HTML-bestanden 
+
+Hoofd-map: bevat application.py en helpers.py (core-bestanden) (& README.md)
+
+
 ## ERD
-![ERD](https://github.com/StijnMichiels00/WhatTheFridge/blob/master/ERD-WhatTheFridge2.png)
-In deze database structure zijn twee tabellen te zien. In de bovenste tabel worden
-gebruikers geregistreerd door middel van een user id, username, een gehasd wachtwoord
-en een exclusion voor een bepaald dieet (dit kan later worden aangepast bij de profielpagina).
-In de onderste tabel worden recepten opgeslagen. Verschillende gebruikers kunnen meerdere
-gerechten opslaan per gebruiker. Vandaar de aanwezigheid van een many to many verband.
+![ERD](docs/ERD-WhatTheFridge2.png)
+
+In deze ERD-diagram zijn twee tabellen te zien. In de bovenste tabel worden
+gebruikers geregistreerd door middel van een UserID, een username, een gehashed wachtwoord
+en hun voorkeuren voor een specifiek dieet.
+
+In de onderste tabel worden de recepten die de gebruiker wilt opslaan, opgeslagen. Verschillende gebruikers kunnen meerdere
+gerechten opslaan per gebruiker. Vandaar de keuze voor een many-to-many verband.
