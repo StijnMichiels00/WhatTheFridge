@@ -83,10 +83,51 @@ def register():
 
         # Redirect to our search page and flash success message
         flash("Welcome to WhatTheFridge?!, " + request.form.get("username") + ". You are now registered.", "success")
-        return redirect("/search")
+        return redirect("/onboarding")
 
     else:
         return render_template("register.html")
+
+@app.route("/onboarding", methods=["GET", "POST"])
+@login_required
+def onboarding():
+
+    if request.method == "POST":
+        # Get preferences from checkboxes
+        glutenFree = request.form.get("glutenFree")
+        vegetarian = request.form.get("vegetarian")
+        vegan = request.form.get("vegan")
+        preferences = ""
+
+        # If gluten free selected, add gluten free to preferences
+        if glutenFree == "glutenFree":
+            preferences = preferences + ",glutenFree"
+
+        # If vegetarian selected, add vegetarian to preferences
+        if vegetarian == "vegetarian":
+            preferences = preferences + ",vegetarian"
+
+        # If vegan selected, add vegan to preferences
+        if vegan == "vegan":
+            preferences = preferences + ",vegan"
+
+        # If nothing is selected, add NULL to preferences
+        if not glutenFree and not vegetarian and not vegan:
+            preferences = ",NULL"
+
+        # Remove first comma
+        preferences = preferences[1:]
+
+        # Update database
+        db.execute("UPDATE users SET diets=:preferences WHERE user_id=:user_id",
+                   preferences=preferences, user_id=session["user_id"])
+
+        flash("Your profile is now complete!", "success")
+        return redirect("/search")
+
+    else:
+        return render_template("onboarding.html")
+
 
 
 @app.route("/login", methods=["GET", "POST"])

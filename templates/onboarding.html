@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Onboarding
+{% endblock %}
+{% block class %}onboarding{% endblock %}
+{% block main %}
+    <div class="jumbotron">
+
+        <h1 class="display-4">Complete your profile</h1>
+        <p class="lead">Help us improve your search experience</p>
+
+            <h3>Diets and preferences</h3>
+            <p>Get results catered to your preferences.</p>
+
+
+            <form action="/onboarding" method="post">
+
+                <input type="checkbox" name="glutenFree" value="glutenFree" {{box_glutenFree}}> Gluten Free<br>
+
+                <input type="checkbox" name="vegetarian" value="vegetarian" {{box_vegetarian}}> Vegetarian<br>
+
+                <input type="checkbox" name="vegan" value="vegan" {{box_vegan}}> Vegan<br><br>
+
+                <button class="btn btn-info" type="submit"><i class="fas fa-chevron-right"></i> Next</button>
+            </form>
+    </div>
+{% endblock %}
