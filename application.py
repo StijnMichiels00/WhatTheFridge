@@ -16,12 +16,8 @@ app = Flask(__name__)
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
-# Ensure responses aren't cached
 @app.after_request
 def after_request(response):
-    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    response.headers["Expires"] = 0
-    response.headers["Pragma"] = "no-cache"
     return response
 
 
@@ -85,7 +81,7 @@ def register():
         # Remember which user is logged in
         session["user_id"] = user
 
-        # Redirect to our search page
+        # Redirect to our search page and flash success message
         flash("Welcome to WhatTheFridge?!, " + request.form.get("username") + ". You are now registered.", "success")
         return redirect("/search")
 
@@ -134,7 +130,7 @@ def login():
 @app.route("/search", methods=["GET"])
 @login_required
 def search():
-    # Make sure all ingredients in a GET-request are returned to page (for edit query button)
+    # Make sure all ingredients in a GET-request are returned to page (for edit ingredients button)
     if request.args.get("ingredients"):
         # Format them for textbox
         ingredients = request.args.get("ingredients").replace(",", "\n")
@@ -145,7 +141,7 @@ def search():
 @app.route("/support", methods=["GET"])
 def support():
     if not session:
-        # No personalised support page when logged out
+        # No personalised support page when not logged in
         return render_template("support.html")
     else:
         # Get personalised support page when user is logged in
@@ -168,12 +164,14 @@ def results():
         flash("Provide at least one ingredient.", "warning")
         return redirect("/search")
 
+    # Check diets
     if len(diets) == 1 and 'NULL' not in diets:
         recipes_info = lookup(ingredients, ranking=1, number=15)
         recipes_extra_info = get_extra_info(recipes_info)
         recipes_result = []
         recipes_result_extra = []
         recipe_count = 0
+        # Filter out recipes with diet
         for i in range(len(recipes_info[0])):
             if recipes_extra_info[i][diets[0]] == True and recipe_count < 10:
                 recipes_result.append(recipes_info[0][i])
@@ -186,6 +184,7 @@ def results():
         recipes_result = []
         recipes_result_extra = []
         recipe_count = 0
+        # Filter out recipes with two diet
         for i in range(len(recipes_info[0])):
             if recipes_extra_info[i][diets[0]] == True and recipes_extra_info[i][diets[1]] == True and recipe_count < 10:
                 recipes_result.append(recipes_info[0][i])
@@ -198,6 +197,7 @@ def results():
         recipes_result = []
         recipes_result_extra = []
         recipe_count = 0
+        # Filter out recipes with diet vegan/vegetarian & glutenfree
         for i in range(len(recipes_info[0])):
             if recipes_extra_info[i]['vegan'] == True and recipes_extra_info[i]['glutenFree'] == True and recipe_count < 10:
                 recipes_result.append(recipes_info[0][i])
@@ -205,14 +205,14 @@ def results():
                 recipe_count += 1
 
     else:
-        # Lookup
+        # Regular lookup without diets
         recipes_info = lookup(ingredients, ranking)
         recipes_result = recipes_info[0]
 
-        # Lookup extra info
+        # Lookup extra information
         recipes_result_extra = get_extra_info(recipes_info)
 
-    # Error when results are empty (API limit reached (probably))
+    # Error when results are empty (API limit reached)
     if recipes_info == None:
         flash("Something went wrong. Get in touch with us for more information (402).", "error")
         return redirect("/search")
@@ -229,6 +229,7 @@ def results():
 def profile():
 
     if request.method == "POST":
+
         # Get preferences from checkboxes
         glutenFree = request.form.get("glutenFree")
         vegetarian = request.form.get("vegetarian")
@@ -262,15 +263,18 @@ def profile():
         # Remove first comma
         preferences = preferences[1:]
 
+        # Update database
         db.execute("UPDATE users SET diets=:preferences WHERE user_id=:user_id",
                    preferences=preferences, user_id=session["user_id"])
 
+        flash("Preferences updated successfully", "success")
         return redirect("/profile")
 
     else:
         # Retrieve username from database
         username = db.execute("SELECT username FROM users WHERE user_id=:user_id", user_id=session["user_id"])[0]["username"]
         check = db.execute("SELECT diets FROM users WHERE user_id=:user_id", user_id=session["user_id"])[0]["diets"]
+
         # Create lists for checkboxes
         box_glutenFree = ""
         box_vegetarian = ""
@@ -298,6 +302,7 @@ def profile():
 @login_required
 def addfavorite():
 
+    # Get ID for database
     id = request.args.get("id")
 
     # Save favorites from user in database
@@ -326,14 +331,12 @@ def favorites():
         ids = []
         timestamp = dict()
 
+        # Add IDs to list for bulk lookup and create timestamp dict.
         for recipe in saved_recipes:
             ids.append(recipe['recipe'])
             timestamp[recipe['recipe']] = recipe['timestamp']
 
-        # If database is empty raise an error
-        if None in ids:
-            errorhandle("DBCorruptfor", 400)
-
+        # Lookup
         info_recipes = lookup_bulk(ids)
 
         return render_template("favorite.html", info_recipes=info_recipes, timestamp=timestamp)
@@ -371,6 +374,8 @@ def recipe():
 @login_required
 def password():
     if request.method == "POST":
+
+        # Get variables
         currentpassword = request.form.get("current_password")
         newpassword = request.form.get("newpassword")
         confirmnewpassword = request.form.get("confirmnewpassword")
