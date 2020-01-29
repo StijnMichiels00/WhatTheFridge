@@ -57,7 +57,7 @@ _Default is authentication required_
 ![Screenshot](docs/image.png)
 
 ## Product video
-![View on YouTube](https://youtu.be/MHgTHZ7dXzw)
+[View on YouTube](https://youtu.be/MHgTHZ7dXzw)
 ## Models/helpers
 - login_required - herleid gebruiker naar login pagina als authenticatie vereist is
 - server_error - verzorgt error pagina bij fout
