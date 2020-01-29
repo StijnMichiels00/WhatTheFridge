@@ -10,11 +10,17 @@
 </style>
 
 <div class="jumbotron">
-<h1 class="display-4">Search recipes</h1>
-<p class="lead">Tell us what's in your fridge to get the best recommendations</p>
+                <div class="row">
+
+<div class="col-8"><h1 class="display-4">Search recipes</h1>
+<p class="lead">Tell us what's in your fridge to get the best recommendations</p></div>
+    <div class="col-4"><br><h4>Information for diets</h4><p style="color: white;">Edit your diets and preferences on your <a href="/profile" style="color:white;">profile page</a>.</p>
+    </div></div>
+<br>
 
 
 <form action="/results" method="POST">
+
     <div class="form-group">
         <textarea id="Itemlist" name="itemlist" rows="8" readonly class="form-control-plaintext" style="color:white;border: 1px solid white; border-radius: 6px; padding:10px;" placeholder="Get started by adding some items below...">{{ingredients}}</textarea>
         </div>
@@ -51,14 +57,20 @@
                   <option value="2">Least missing ingredients</option>
                 </select>
             </div>
+
         </div>
 
-    <div class="col">
+    <div class="col-6">
         <div class="form-group">
             <button class="btn btn-success" type="submit" id="search"><i class="fas fa-search"></i> Search</button>
-        </div>
-    </div>
+            </div></div></div>
+
+
+
+
+
 </form>
+</div>
 
 <script src="/static/ingredients.js" type="text/javascript"></script>
 
