@@ -16,6 +16,7 @@ app = Flask(__name__)
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
+
 @app.after_request
 def after_request(response):
     return response
@@ -39,6 +40,7 @@ def home():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
         # Must provide username
         if not request.form.get("username"):
@@ -88,10 +90,11 @@ def register():
     else:
         return render_template("register.html")
 
+
 @app.route("/onboarding", methods=["GET", "POST"])
 @login_required
 def onboarding():
-
+    # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
         # Get preferences from checkboxes
         glutenFree = request.form.get("glutenFree")
@@ -127,7 +130,6 @@ def onboarding():
 
     else:
         return render_template("onboarding.html")
-
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -268,9 +270,7 @@ def results():
 @app.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
-
     if request.method == "POST":
-
         # Get preferences from checkboxes
         glutenFree = request.form.get("glutenFree")
         vegetarian = request.form.get("vegetarian")
