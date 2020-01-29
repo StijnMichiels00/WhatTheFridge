@@ -132,6 +132,15 @@
   background-size: cover;
   -o-background-size: cover;
 }
+
+.onboarding {
+  background: url('/static/onboarding.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+}
+
 .results {
   background: url('/static/results.jpg') no-repeat center center fixed;
   -webkit-background-size: cover;
