@@ -42,12 +42,14 @@ API-integraties, filteren, sharing, zoekresultaten verwerken (sorteren?)
 ## Controllers
 - "/" - Home (not logged in) - splashpage (GET)
 - "/register" - Register (not logged in) - registratie voor gebruikers (GET/POST)
+- "/onboarding" - Onboarding - profiel compleet maken (voorkeuren) na registratie (GET/POST)
 - "/login" - Login (not logged in) - inloggen (GET/POST)
 - "/search" - Zoekopdracht - ingredienten invullen en zoek button (GET)
 - "/results" - Zoekresultaten - resultaten van zoekopdracht tonen (POST)
 - "/profile" - Profiel - bewerken profiel, voorkeur qua dieet, wachtwoord (GET/POST)
 - "/favorites" - Favorieten - bekijk opgeslagen recepten (GET)
 - "/support" - FAQ/Contact - veelgestelde vragen/contact e-mail (GET)
+
 
 _Default is authentication required_
 
